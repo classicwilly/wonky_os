@@ -1,0 +1,66 @@
+import React from 'react';
+import ContentCard from './ContentCard';
+import { ALL_GEMS, REWARD_TIERS } from '../constants';
+
+const Gem: React.FC<{ emoji: string; label: string; collected: boolean }> = ({ emoji, label, collected }) => {
+    return (
+        <div className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${collected ? 'bg-accent-green bg-opacity-20' : 'bg-gray-800'}`}>
+            <div className={`text-4xl transition-all duration-500 ${collected ? 'grayscale-0' : 'grayscale'}`}>{emoji}</div>
+            <div className={`text-xs text-center mt-1 ${collected ? 'text-accent-green font-semibold' : 'text-text-light text-opacity-50'}`}>{label}</div>
+        </div>
+    );
+};
+
+interface GemCollectorProps {
+    name: string;
+    collectedGems: string[];
+}
+
+const GemCollector: React.FC<GemCollectorProps> = ({ name, collectedGems }) => {
+    const collectedCount = collectedGems.length;
+    const totalCount = ALL_GEMS.length;
+
+    const nextTier = REWARD_TIERS.find(tier => collectedCount < tier.threshold);
+    const gemsForNextTier = nextTier ? nextTier.threshold - collectedCount : 0;
+    const progressPercentage = nextTier ? (collectedCount / nextTier.threshold) * 100 : 100;
+
+    return (
+        <ContentCard title={`💎 ${name}'s Gem Collection (${collectedCount}/${totalCount})`}>
+            <div className="mb-6">
+                {nextTier ? (
+                    <>
+                        <h3 className="text-lg font-semibold text-accent-blue text-center mb-2">
+                            Collect {gemsForNextTier} more gems to unlock: <span className="font-bold">{nextTier.title}!</span>
+                        </h3>
+                        <div className="w-full bg-gray-700 rounded-full h-4">
+                            <div 
+                                className="bg-gradient-to-r from-accent-blue to-accent-green h-4 rounded-full transition-all duration-500" 
+                                style={{ width: `${progressPercentage}%` }}
+                            ></div>
+                        </div>
+                    </>
+                ) : (
+                    <h3 className="text-lg font-bold text-accent-green text-center">
+                       🎉 All Tiers Unlocked! Amazing Job! 🎉
+                    </h3>
+                )}
+            </div>
+            
+            <p className="text-sm text-text-light text-opacity-80 mb-4">
+                Earn gems by completing tasks in your checklists! Collected gems are in color.
+            </p>
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3">
+                {ALL_GEMS.map(gem => (
+                    <Gem 
+                        key={gem.id}
+                        emoji={gem.emoji}
+                        label={gem.label}
+                        collected={collectedGems.includes(gem.id)}
+                    />
+                ))}
+            </div>
+        </ContentCard>
+    );
+};
+
+export default GemCollector;
