@@ -1,37 +1,40 @@
 import React, { useState } from 'react';
-import ContentCard from './ContentCard';
-import ChecklistItem from './ChecklistItem';
-import OriginStory from './OriginStory';
-import QuickJump from './QuickJump';
+import ContentCard from './ContentCard.tsx';
+import ChecklistItem from './ChecklistItem.tsx';
+// Removed: OriginStory is deleted.
+// import OriginStory from './OriginStory.tsx';
+import QuickJump from './QuickJump.tsx';
 // Fix: Added '.tsx' extension to the import path to ensure the file is treated as a module.
 import { ALL_CHECKLIST_DATA, ChecklistSectionData } from '../checklist-data.tsx';
 
 const Manifesto: React.FC = () => {
-    const [activeTab, setActiveTab] = useState<'manifesto' | 'origin'>('manifesto');
+    // Removed: activeTab state is no longer needed as OriginStory is removed.
+    // const [activeTab, setActiveTab] = useState<'manifesto' | 'origin'>('manifesto');
     const manifestoData = ALL_CHECKLIST_DATA.filter(s => s.sourceDocument === 'Manifesto');
 
     const sections = manifestoData.map(s => ({ id: s.id, title: s.title }));
 
-    const TabButton: React.FC<{
-        tab: 'manifesto' | 'origin';
-        label: string;
-    }> = ({ tab, label }) => {
-        const isActive = activeTab === tab;
-        return (
-            <button
-                onClick={() => setActiveTab(tab)}
-                className={`px-6 py-3 font-semibold text-lg border-b-2 transition-colors ${
-                    isActive
-                        ? 'border-accent-blue text-accent-blue'
-                        : 'border-transparent text-text-light text-opacity-70 hover:text-white'
-                }`}
-                role="tab"
-                aria-selected={isActive}
-            >
-                {label}
-            </button>
-        );
-    };
+    // Removed: TabButton component is no longer needed.
+    // const TabButton: React.FC<{
+    //     tab: 'manifesto' | 'origin';
+    //     label: string;
+    // }> = ({ tab, label }) => {
+    //     const isActive = activeTab === tab;
+    //     return (
+    //         <button
+    //             onClick={() => setActiveTab(tab)}
+    //             className={`px-6 py-3 font-semibold text-lg border-b-2 transition-colors ${
+    //                 isActive
+    //                     ? 'border-accent-blue text-accent-blue'
+    //                     : 'border-transparent text-text-light text-opacity-70 hover:text-white'
+    //             }`}
+    //             role="tab"
+    //             aria-selected={isActive}
+    //         >
+    //             {label}
+    //         </button>
+    //     );
+    // };
 
     const renderSubSections = (subSections: ChecklistSectionData[] = []) => {
         return subSections.map(sub => (
@@ -59,33 +62,34 @@ const Manifesto: React.FC = () => {
                 <p className="text-xl font-semibold text-accent-blue">Structure Engineered for Chaos</p>
             </header>
 
-            <div className="mb-8 border-b border-gray-700 flex justify-center no-print">
+            {/* Removed: Tab navigation is no longer needed as OriginStory is removed. */}
+            {/* <div className="mb-8 border-b border-gray-700 flex justify-center no-print">
                 <TabButton tab="manifesto" label="The Manifesto" />
                 <TabButton tab="origin" label="The Origin Story" />
-            </div>
+            </div> */}
 
-            {activeTab === 'manifesto' && (
-                 <>
-                    <QuickJump sections={sections} />
-                    <div className="space-y-6 max-w-4xl mx-auto text-lg text-text-light text-opacity-90 leading-relaxed">
-                        {manifestoData.map(section => (
-                            <section key={section.id} id={section.id}>
-                                <ContentCard title={section.title}>
-                                {section.description && <div dangerouslySetInnerHTML={{ __html: section.description }} />}
-                                {section.subSections && renderSubSections(section.subSections)}
-                                </ContentCard>
-                            </section>
-                        ))}
-                        
-                        <footer className="text-center mt-12 pt-8 border-t border-gray-700">
-                            <p className="text-2xl font-bold text-accent-blue">"The Wonky Sprout: Structure Engineered for Chaos."</p>
-                            <p className="mt-4">This is not a philosophy. This is not a journey. This is not inspiration.</p>
-                            <p className="mt-2 text-xl font-bold">This is an engineering solution.</p>
-                        </footer>
-                    </div>
-                 </>
-            )}
-            {activeTab === 'origin' && <OriginStory />}
+            {/* Always render manifesto content now */}
+            <>
+                <QuickJump sections={sections} />
+                <div className="space-y-6 max-w-4xl mx-auto text-lg text-text-light text-opacity-90 leading-relaxed">
+                    {manifestoData.map(section => (
+                        <section key={section.id} id={section.id}>
+                            <ContentCard title={section.title}>
+                            {section.description && <div dangerouslySetInnerHTML={{ __html: section.description }} />}
+                            {section.subSections && renderSubSections(section.subSections)}
+                            </ContentCard>
+                        </section>
+                    ))}
+                    
+                    <footer className="text-center mt-12 pt-8 border-t border-gray-700">
+                        <p className="text-2xl font-bold text-accent-blue">"The Wonky Sprout: Structure Engineered for Chaos."</p>
+                        <p className="mt-4">This is not a philosophy. This is not a journey. This is not inspiration.</p>
+                        <p className="mt-2 text-xl font-bold">This is an engineering solution.</p>
+                    </footer>
+                </div>
+            </>
+            {/* Removed: Conditional rendering for OriginStory is no longer needed. */}
+            {/* {activeTab === 'origin' && <OriginStory />} */}
         </div>
     );
 };

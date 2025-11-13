@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAppState } from '../contexts/AppStateContext';
+import { useAppState } from '../contexts/AppStateContext.tsx';
 
 interface ChecklistItemProps {
   id: string;

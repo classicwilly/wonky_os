@@ -1,6 +1,6 @@
 import React from 'react';
-import { Sop, ViewType } from '../types';
-import { useAppState } from '../contexts/AppStateContext';
+import { Sop, ViewType } from '../types.tsx';
+import { useAppState } from '../contexts/AppStateContext.tsx';
 
 interface SopCardProps {
   sop: Sop;

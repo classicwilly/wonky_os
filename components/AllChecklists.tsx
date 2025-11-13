@@ -1,8 +1,8 @@
 import React from 'react';
-import ChecklistItem from './ChecklistItem';
-import ContentCard from './ContentCard';
+import ChecklistItem from './ChecklistItem.tsx';
+import ContentCard from './ContentCard.tsx';
 import { ALL_CHECKLIST_DATA, ChecklistSectionData } from '../checklist-data.tsx';
-import QuickJump from './QuickJump';
+import QuickJump from './QuickJump.tsx';
 
 const AllChecklists: React.FC = () => {
   const groupedBySource = ALL_CHECKLIST_DATA.reduce<Record<string, ChecklistSectionData[]>>((acc, section) => {
@@ -65,7 +65,7 @@ const AllChecklists: React.FC = () => {
   return (
     <div>
       <header className="text-center mb-10 relative">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-accent-teal mb-4">Master Checklist Control</h1>
+        <h1 className="text-4xl md::text-5xl font-extrabold text-accent-teal mb-4">Master Checklist Control</h1>
         <p className="text-lg text-text-light text-opacity-80 max-w-3xl mx-auto">
           An aggregated, editable, and printable view of every checklist across the Wonky Sprout OS. Use this for comprehensive reviews or offline execution.
         </p>

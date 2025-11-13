@@ -1,6 +1,6 @@
 import React from 'react';
-import ContentCard from './ContentCard';
-import { ALL_GEMS, REWARD_TIERS } from '../constants';
+import ContentCard from './ContentCard.tsx';
+import { ALL_GEMS, REWARD_TIERS } from '../constants.tsx';
 
 const Gem: React.FC<{ emoji: string; label: string; collected: boolean }> = ({ emoji, label, collected }) => {
     return (

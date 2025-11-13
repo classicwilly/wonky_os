@@ -1,10 +1,10 @@
 import React, { createContext, useContext, ReactNode, useReducer } from 'react';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import { AppState, Action, ViewType, Mood, Energy, KidLocation, Sop, CalendarEvent } from '../types';
-import { SOP_DATA } from '../constants';
+import { useLocalStorage } from '../hooks/useLocalStorage.tsx';
+import { AppState, Action, ViewType, Mood, Energy, KidLocation, Sop, CalendarEvent, PersonaType, ModuleKey, WillowModuleKey, SebastianModuleKey, CoParentingModuleKey } from '../types.tsx';
+import { SOP_DATA, ALL_WILLIAM_MODULES_CONFIG, ALL_WILLOW_MODULES_CONFIG, ALL_SEBASTIAN_MODULES_CONFIG, ALL_CO_PARENTING_MODULES_CONFIG } from '../constants.tsx';
 
 const defaultState: AppState = {
-  view: 'command-center',
+  view: 'dashboard-launcher',
   checkedItems: {},
   textInputs: {},
   statusMood: null,
@@ -20,6 +20,14 @@ const defaultState: AppState = {
   modifiedSops: {},
   isModMode: false,
   calendarEvents: [],
+  currentPersona: 'launcher', // Initialize to 'launcher' to show selection screen
+  williamDashboardModules: ALL_WILLIAM_MODULES_CONFIG.filter(m => m.defaultEnabled).map(m => m.id), // Default enabled modules for William
+  willowDashboardModules: ALL_WILLOW_MODULES_CONFIG.filter(m => m.defaultEnabled).map(m => m.id), // Default enabled modules for Willow
+  sebastianDashboardModules: ALL_SEBASTIAN_MODULES_CONFIG.filter(m => m.defaultEnabled).map(m => m.id), // Default enabled modules for Sebastian
+  coParentingDashboardModules: ALL_CO_PARENTING_MODULES_CONFIG.filter(m => m.defaultEnabled).map(m => m.id), // Default enabled modules for Co-Parenting
+  // FIX: Added missing properties to defaultState.
+  initialSetupComplete: false, // Tracks if the initial setup guide has been completed
+  activeSops: [], // Stores IDs of SOPs selected by William to display on his dashboard
 };
 
 function appReducer(state: AppState, action: Action): AppState {
@@ -96,6 +104,32 @@ function appReducer(state: AppState, action: Action): AppState {
       return { ...state, checkedItems: {}, textInputs: {} };
     case 'RESET_REWARDS':
       return { ...state, collectedGems: { willow: [], sebastian: [] }, collectedAchievements: [] };
+    case 'SET_PERSONA': // New action to set the current persona
+      // When switching personas, reset the view to a default for that persona.
+      // For 'launcher', default view is 'dashboard-launcher'.
+      // For specific personas, can have a default view (e.g., 'command-center' for william)
+      let defaultViewForPersona: ViewType;
+      switch(action.payload) {
+        case 'william': defaultViewForPersona = 'williams-dashboard'; break; // Changed to williams-dashboard
+        case 'willow': defaultViewForPersona = 'willows-dashboard'; break; // Changed to willows-dashboard
+        case 'sebastian': defaultViewForPersona = 'sebastians-dashboard'; break; // Changed to sebastians-dashboard
+        case 'co-parenting': defaultViewForPersona = 'co-parenting-dashboard'; break; // Changed to co-parenting-dashboard
+        case 'launcher':
+        default: defaultViewForPersona = 'dashboard-launcher'; break;
+      }
+      return { ...state, currentPersona: action.payload, view: defaultViewForPersona };
+    case 'SET_WILL_DASHBOARD_MODULES':
+      return { ...state, williamDashboardModules: action.payload };
+    case 'SET_WILLOW_DASHBOARD_MODULES': // New action for Willow's modules
+      return { ...state, willowDashboardModules: action.payload };
+    case 'SET_SEBASTIAN_DASHBOARD_MODULES': // New action for Sebastian's modules
+      return { ...state, sebastianDashboardModules: action.payload };
+    case 'SET_CO_PARENTING_DASHBOARD_MODULES': // New action for Co-Parenting modules
+      return { ...state, coParentingDashboardModules: action.payload };
+    case 'SET_INITIAL_SETUP_COMPLETE': // Action to mark setup as complete
+      return { ...state, initialSetupComplete: action.payload };
+    case 'SET_ACTIVE_SOPS': // Action to update active SOPs
+      return { ...state, activeSops: action.payload };
     default:
       return state;
   }

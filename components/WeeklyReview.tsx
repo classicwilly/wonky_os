@@ -1,7 +1,7 @@
 import React from 'react';
-import QuickJump from './QuickJump';
-import ChecklistItem from './ChecklistItem';
-import ContentCard from './ContentCard';
+import QuickJump from './QuickJump.tsx';
+import ChecklistItem from './ChecklistItem.tsx';
+import ContentCard from './ContentCard.tsx';
 import { ALL_CHECKLIST_DATA } from '../checklist-data.tsx';
 
 const WeeklyReview: React.FC = () => {

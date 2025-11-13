@@ -1,4 +1,23 @@
-import { Sop } from './types';
+import { Sop, ModuleConfig, WillowModuleConfig, SebastianModuleConfig, CoParentingModuleConfig } from './types.tsx';
+import WilliamCoreDashboardModule from './components/modules/WilliamCoreDashboardModule.tsx';
+import DayProgressBarModule from './components/modules/DayProgressBarModule.tsx';
+import StatusTrackerModule from './components/modules/StatusTrackerModule.tsx'; // Corrected import
+import EssentialsTrackerModule from './components/modules/EssentialsTrackerModule.tsx'; // Corrected import
+import KidsTrackerModule from './components/modules/KidsTrackerModule.tsx'; // Corrected import
+import WonkyAIModule from './components/modules/WonkyAIModule.tsx'; // Corrected import
+import AchievementTrackerModule from './components/modules/AchievementTrackerModule.tsx'; // Corrected import
+import ActiveSopsDisplayModule from './components/modules/william/ActiveSopsDisplayModule.tsx';
+import ActiveSopsSelectorModule from './components/modules/william/ActiveSopsSelectorModule.tsx';
+
+
+import WillowChecklistModule from './components/modules/willow/WillowChecklistModule.tsx';
+import WillowGemCollectorModule from './components/modules/willow/WillowGemCollectorModule.tsx';
+
+import SebastianChecklistModule from './components/modules/sebastian/SebastianChecklistModule.tsx';
+import SebastianGemCollectorModule from './components/modules/sebastian/SebastianGemCollectorModule.tsx';
+
+import AICommunicationCoachModule from './components/modules/co-parenting/AICommunicationCoachModule.tsx';
+import SharedCalendarModule from './components/modules/co-parenting/SharedCalendarModule.tsx';
 
 export const SOP_DATA: Sop[] = [
   {
@@ -133,7 +152,7 @@ export const SOP_DATA: Sop[] = [
     id: '18',
     category: 'KIDS_SOP',
     subCategory: 'kids',
-    viewId: 'co-parenting-protocol',
+    viewId: 'co-parenting-dashboard', // Corrected viewId
     title: 'Co-Parenting Communication Protocol',
     description: 'A structured system for low-friction, high-clarity communication and logistics with the co-parent. Focus on facts, not feelings.',
   }
@@ -235,4 +254,144 @@ export const ADULT_REWARD_TIERS: RewardTier[] = [
     title: 'Guilt-Free Rest Day',
     description: 'Schedule a full day with zero obligations. True system downtime.',
   }
+];
+
+
+// --- Configurable Modules for William's Dashboard ---
+export const ALL_WILLIAM_MODULES_CONFIG: ModuleConfig[] = [
+  {
+    id: 'william-core-dashboard-module',
+    name: 'Core Dashboard Info',
+    description: 'Displays current operating mode, task, quick launchpad, and critical tasks for the day.',
+    component: WilliamCoreDashboardModule,
+    defaultEnabled: true,
+    category: 'core',
+  },
+  {
+    id: 'day-progress-bar-module',
+    name: 'Day Progress Bar',
+    description: 'Visual representation of daily progress from 6 AM to 10:30 PM.',
+    component: DayProgressBarModule,
+    defaultEnabled: true,
+    category: 'trackers',
+  },
+  {
+    id: 'status-tracker-module',
+    name: 'Personal Status Tracker',
+    description: 'Track your current mood and energy levels.',
+    component: StatusTrackerModule,
+    defaultEnabled: true,
+    category: 'trackers',
+  },
+  {
+    id: 'essentials-tracker-module',
+    name: 'Daily Essentials Tracker',
+    description: 'Monitor daily medicine, hydration, and nutrition intake.',
+    component: EssentialsTrackerModule,
+    defaultEnabled: true,
+    category: 'trackers',
+  },
+  {
+    id: 'kids-tracker-module',
+    name: 'Kids Status Tracker',
+    description: 'Track location and add notes for Willow and Sebastian.',
+    component: KidsTrackerModule,
+    defaultEnabled: true,
+    category: 'trackers',
+  },
+  {
+    id: 'wonky-ai-module',
+    name: 'Wonky AI Assistant',
+    description: 'AI-powered communication coach for structured, anti-BS problem-solving.',
+    component: WonkyAIModule,
+    defaultEnabled: true,
+    category: 'utilities',
+  },
+  {
+    id: 'achievement-tracker-module',
+    name: 'Achievement System',
+    description: 'Track personal achievements and adult reward tiers.',
+    component: AchievementTrackerModule,
+    defaultEnabled: true,
+    category: 'trackers',
+  },
+  {
+    id: 'active-sops-module',
+    name: 'Active SOPs Display',
+    description: 'Displays the SOPs you have marked as "active" for quick reference and execution.',
+    component: ActiveSopsDisplayModule,
+    defaultEnabled: true,
+    category: 'content', // Categorized as 'content'
+  },
+  {
+    id: 'active-sops-selector-module',
+    name: 'Active SOPs Selector',
+    description: 'Select which SOPs you want to see displayed in the Active SOPs module.',
+    component: ActiveSopsSelectorModule,
+    defaultEnabled: true,
+    category: 'selection', // Categorized as 'selection'
+  },
+];
+
+// --- Configurable Modules for Willow's Dashboard ---
+export const ALL_WILLOW_MODULES_CONFIG: WillowModuleConfig[] = [
+  {
+    id: 'willow-checklist-module',
+    name: 'Daily Checklists',
+    description: "Willow's daily and weekly checklists for routines and tasks.",
+    component: WillowChecklistModule,
+    defaultEnabled: true,
+    category: 'checklists',
+  },
+  {
+    id: 'willow-gem-collector-module',
+    name: 'Gem Collection',
+    description: "Willow's collected gems and progress towards rewards.",
+    component: WillowGemCollectorModule,
+    defaultEnabled: true,
+    category: 'rewards',
+  },
+  // Additional modules for Willow could be added here, e.g., a simplified calendar, a chore tracker, etc.
+];
+
+// --- Configurable Modules for Sebastian's Dashboard ---
+export const ALL_SEBASTIAN_MODULES_CONFIG: SebastianModuleConfig[] = [
+  {
+    id: 'sebastian-checklist-module',
+    name: 'Daily Checklists',
+    description: "Sebastian's daily and weekly checklists for routines and tasks.",
+    component: SebastianChecklistModule,
+    defaultEnabled: true,
+    category: 'checklists',
+  },
+  {
+    id: 'sebastian-gem-collector-module',
+    name: 'Gem Collection',
+    description: "Sebastian's collected gems and progress towards rewards.",
+    component: SebastianGemCollectorModule,
+    defaultEnabled: true,
+    category: 'rewards',
+  },
+  // Additional modules for Sebastian could be added here, e.g., a simplified calendar, a chore tracker, etc.
+];
+
+// --- Configurable Modules for Co-Parenting Dashboard ---
+export const ALL_CO_PARENTING_MODULES_CONFIG: CoParentingModuleConfig[] = [
+  {
+    id: 'ai-communication-coach-module',
+    name: 'AI Communication Coach',
+    description: 'Translate direct messages into collaborative, low-conflict communication for co-parenting.',
+    component: AICommunicationCoachModule,
+    defaultEnabled: true,
+    category: 'communication',
+  },
+  {
+    id: 'shared-calendar-module',
+    name: 'Shared Calendar',
+    description: 'Manage and view shared family events, appointments, and handoffs.',
+    component: SharedCalendarModule,
+    defaultEnabled: true,
+    category: 'scheduling',
+  },
+  // Additional modules for Co-Parenting could be added here, e.g., a document vault, a expense tracker, etc.
 ];

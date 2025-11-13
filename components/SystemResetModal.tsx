@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAppState } from '../contexts/AppStateContext';
+import { useAppState } from '../contexts/AppStateContext.tsx';
 
 interface SystemResetModalProps {
     isOpen: boolean;

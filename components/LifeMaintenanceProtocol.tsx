@@ -1,7 +1,7 @@
 import React from 'react';
-import ContentCard from './ContentCard';
-import ChecklistItem from './ChecklistItem';
-import QuickJump from './QuickJump';
+import ContentCard from './ContentCard.tsx';
+import ChecklistItem from './ChecklistItem.tsx';
+import QuickJump from './QuickJump.tsx';
 // Fix: Added '.tsx' extension to the import path to ensure the file is treated as a module.
 import { ALL_CHECKLIST_DATA } from '../checklist-data.tsx';
 
@@ -31,7 +31,7 @@ const LifeMaintenanceProtocol: React.FC = () => {
               {section.description && <p className="text-lg text-text-light text-opacity-90 font-semibold mb-4">{section.description}</p>}
               {section.items && (
                 <ul className="list-none space-y-2 text-lg mt-4">
-                  {section.items.map(item => <ChecklistItem key={item.id} id={item.id}>{item.label}</ChecklistItem>)}
+                  {section.items.map(item => <ChecklistItem key={item.id} id={item.id} achievementAwardId={item.achievementAwardId}>{item.label}</ChecklistItem>)}
                 </ul>
               )}
               {section.subSections?.map(subSection => (

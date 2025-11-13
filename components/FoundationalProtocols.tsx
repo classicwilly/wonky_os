@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import ContentCard from './ContentCard';
-import ChecklistItem from './ChecklistItem';
-import QuickJump from './QuickJump';
-import { useAppState } from '../contexts/AppStateContext';
-import { SOP_DATA } from '../constants';
+import ContentCard from './ContentCard.tsx';
+import ChecklistItem from './ChecklistItem.tsx';
+import QuickJump from './QuickJump.tsx';
+import { useAppState } from '../contexts/AppStateContext.tsx';
+import { SOP_DATA } from '../constants.tsx';
 // Fix: Added '.tsx' extension to the import path to ensure the file is treated as a module.
 import { ALL_CHECKLIST_DATA } from '../checklist-data.tsx';
-import { Sop } from '../types';
+import { Sop } from '../types.tsx';
 
 const FoundationalProtocols: React.FC = () => {
   const SOP_ID = '1';

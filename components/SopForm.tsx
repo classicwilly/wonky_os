@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Sop } from '../types';
-import { useAppState } from '../contexts/AppStateContext';
+import { Sop } from '../types.tsx';
+import { useAppState } from '../contexts/AppStateContext.tsx';
 
 const SopForm: React.FC = () => {
   const [title, setTitle] = useState('');

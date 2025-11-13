@@ -1,69 +1,95 @@
 import React, { useState } from 'react';
-import WeeklyReview from './components/WeeklyReview';
-import ContextSwitchingProtocol from './components/ContextSwitchingProtocol';
-import ExecutiveDysfunctionProtocol from './components/ExecutiveDysfunctionProtocol';
-import SensoryOverloadProtocol from './components/SensoryOverloadProtocol';
-import ClassicWillyProtocol from './components/ClassicWillyProtocol';
-import FoundationalProtocols from './components/FoundationalProtocols';
-import FamilyStructureModeProtocol from './components/FamilyStructureModeProtocol';
-import LifeMaintenanceProtocol from './components/LifeMaintenanceProtocol';
-import MorningTransitionProtocol from './components/MorningTransitionProtocol';
-import PersonalHygieneProtocol from './components/PersonalHygieneProtocol';
-import SoloExecutionModeProtocol from './components/SoloExecutionModeProtocol';
-import CommandCenterSetupSop from './components/CommandCenterSetupSop';
-import PixelFoldSetupSop from './components/PixelFoldSetupSop';
-import AccessibilitySafetyProtocol from './components/AccessibilitySafetyProtocol';
-import BubbleShieldProtocol from './components/BubbleShieldProtocol';
-import Manifesto from './components/Manifesto';
-import HeadphoneControllerIpi from './components/HeadphoneControllerIpi';
-import CommandCenter from './components/CommandCenter';
-import SopVault from './components/SopVault';
-import { useCurrentMode } from './hooks/useCurrentMode';
-import { AppStateProvider, useAppState } from './contexts/AppStateContext';
-import Header from './components/Header';
-import SopForm from './components/SopForm';
-import SystemIntegrationGuide from './components/SystemIntegrationGuide';
-import AllChecklists from './components/AllChecklists';
-import CoParentingProtocol from './components/CoParentingProtocol';
-import KidsCorner from './components/KidsCorner';
-import SystemResetModal from './components/SystemResetModal';
-import WillowsCorner from './components/WillowsCorner';
-import BashsCorner from './components/BashsCorner';
-import ScrollToTopButton from './components/ScrollToTopButton';
+import LifeMaintenanceProtocol from './components/LifeMaintenanceProtocol.tsx';
+import MorningTransitionProtocol from './components/MorningTransitionProtocol.tsx';
+import PersonalHygieneProtocol from './components/PersonalHygieneProtocol.tsx';
+import SoloExecutionModeProtocol from './components/SoloExecutionModeProtocol.tsx';
+import CommandCenterSetupSop from './components/CommandCenterSetupSop.tsx';
+import PixelFoldSetupSop from './components/PixelFoldSetupSop.tsx';
+import AccessibilitySafetyProtocol from './components/AccessibilitySafetyProtocol.tsx';
+import BubbleShieldProtocol from './components/BubbleShieldProtocol.tsx';
+import Manifesto from './components/Manifesto.tsx';
+import HeadphoneControllerIpi from './components/HeadphoneControllerIpi.tsx';
+import { useCurrentMode } from './hooks/useCurrentMode.tsx';
+import { AppStateProvider, useAppState } from './contexts/AppStateContext.tsx';
+import Header from './components/Header.tsx';
+import SopForm from './components/SopForm.tsx';
+import SystemIntegrationGuide from './components/SystemIntegrationGuide.tsx';
+import AllChecklists from './components/AllChecklists.tsx';
+import CoParentingDashboard from './components/CoParentingDashboard.tsx'; // Renamed and refactored
+import CoParentingDashboardBuilder from './components/CoParentingDashboardBuilder.tsx'; // New import for Co-Parenting dashboard builder
+import SystemResetModal from './components/SystemResetModal.tsx';
+import ScrollToTopButton from './components/ScrollToTopButton.tsx';
+import DashboardLauncher from './components/DashboardLauncher.tsx';
+import WilliamsDashboard from './components/WilliamsDashboard.tsx'; // New import for William's main dashboard
+import WilliamDashboardBuilder from './components/WilliamDashboardBuilder.tsx'; // New import for William's dashboard builder
+import WillowsDashboard from './components/WillowsDashboard.tsx'; // New import for Willow's main dashboard (renamed)
+import WillowsDashboardBuilder from './components/WillowsDashboardBuilder.tsx'; // New import for Willow's dashboard builder
+import SopVault from './components/SopVault.tsx';
+import WeeklyReview from './components/WeeklyReview.tsx';
+import FoundationalProtocols from './components/FoundationalProtocols.tsx';
+import FamilyStructureModeProtocol from './components/FamilyStructureModeProtocol.tsx';
+import ClassicWillyProtocol from './components/ClassicWillyProtocol.tsx';
+import ContextSwitchingProtocol from './components/ContextSwitchingProtocol.tsx';
+import ExecutiveDysfunctionProtocol from './components/ExecutiveDysfunctionProtocol.tsx';
+import SensoryOverloadProtocol from './components/SensoryOverloadProtocol.tsx';
+import SebastiansDashboard from './components/SebastiansDashboard.tsx'; // New import for Sebastian's main dashboard (renamed)
+import SebastiansDashboardBuilder from './components/SebastiansDashboardBuilder.tsx'; // New import for Sebastian's dashboard builder
+import WonkyAISetupGuide from './components/WonkyAISetupGuide.tsx'; // New import for the initial setup guide
+
 
 const AppContent: React.FC = () => {
-  const { appState } = useAppState();
-  const { view } = appState;
+  const { appState, dispatch } = useAppState();
+  const currentMode = useCurrentMode(); // Keep for child components that might need it
   const [isResetModalOpen, setResetModalOpen] = useState(false);
-  const currentMode = useCurrentMode();
 
-  const handleOpenResetModal = () => setResetModalOpen(true);
-  const handleCloseResetModal = () => setResetModalOpen(false);
+  // Content for each view type
+  const renderView = () => {
+    // If setup is not complete, ONLY render the setup guide.
+    // This is the top-level control for mandatory onboarding.
+    if (!appState.initialSetupComplete) {
+      return <WonkyAISetupGuide />;
+    }
 
-  const renderContent = () => {
-    switch (view) {
-      case 'command-center':
-        return <CommandCenter currentMode={currentMode} />;
+    // Once setup is complete, render based on the current view state.
+    switch (appState.view) {
+      case 'dashboard-launcher':
+        return <DashboardLauncher />;
+      case 'williams-dashboard':
+        return <WilliamsDashboard />;
+      case 'william-dashboard-builder':
+        return <WilliamDashboardBuilder />;
+      case 'willows-dashboard':
+        return <WillowsDashboard />;
+      case 'willow-dashboard-builder':
+        return <WillowsDashboardBuilder />;
+      case 'sebastians-dashboard':
+        return <SebastiansDashboard />;
+      case 'sebastian-dashboard-builder':
+        return <SebastiansDashboardBuilder />;
+      case 'co-parenting-dashboard':
+        return <CoParentingDashboard />;
+      case 'co-parenting-dashboard-builder':
+        return <CoParentingDashboardBuilder />;
       case 'sop-vault':
         return <SopVault />;
       case 'weekly-review':
         return <WeeklyReview />;
-      case 'kids-corner':
-        return <KidsCorner />;
       case 'manifesto':
         return <Manifesto />;
+      case 'foundational-protocols':
+        return <FoundationalProtocols />;
+      case 'family-structure-mode':
+        return <FamilyStructureModeProtocol />;
+      case 'solo-execution-mode':
+        return <SoloExecutionModeProtocol />;
+      case 'classic-willy-protocol':
+        return <ClassicWillyProtocol />;
       case 'context-switching':
         return <ContextSwitchingProtocol />;
       case 'executive-dysfunction':
         return <ExecutiveDysfunctionProtocol />;
       case 'sensory-overload':
         return <SensoryOverloadProtocol />;
-      case 'classic-willy-protocol':
-        return <ClassicWillyProtocol />;
-      case 'foundational-protocols':
-        return <FoundationalProtocols />;
-      case 'family-structure-mode':
-        return <FamilyStructureModeProtocol />;
       case 'life-maintenance-protocol':
         return <LifeMaintenanceProtocol />;
       case 'morning-transition-protocol':
@@ -72,56 +98,43 @@ const AppContent: React.FC = () => {
         return <PersonalHygieneProtocol />;
       case 'bubble-shield-protocol':
         return <BubbleShieldProtocol />;
-      case 'solo-execution-mode':
-        return <SoloExecutionModeProtocol />;
       case 'command-center-setup':
         return <CommandCenterSetupSop />;
       case 'pixel-fold-setup':
         return <PixelFoldSetupSop />;
       case 'accessibility-safety':
         return <AccessibilitySafetyProtocol />;
-      case 'headphone-controller-ipi':
-        return <HeadphoneControllerIpi />;
       case 'create-sop':
         return <SopForm />;
       case 'system-integration':
         return <SystemIntegrationGuide />;
-      case 'co-parenting-protocol':
-        return <CoParentingProtocol />;
       case 'all-checklists':
         return <AllChecklists />;
-      case 'willows-corner':
-        return <WillowsCorner />;
-      case 'bashs-corner':
-        return <BashsCorner />;
+      case 'headphone-controller-ipi':
+        return <HeadphoneControllerIpi />;
       default:
-        return <CommandCenter currentMode={currentMode} />;
+        // Default to the DashboardLauncher if an unhandled view is somehow active
+        // This acts as a safe fallback once initial setup is complete
+        return <DashboardLauncher />;
     }
   };
-  
+
   return (
     <div className="min-h-screen bg-background-dark text-text-light flex flex-col">
-      <Header openResetModal={handleOpenResetModal} />
-      <div className="flex-1 flex">
-        <main id="main-content" className="flex-grow w-full container mx-auto p-4 md:p-8">
-          {renderContent()}
-        </main>
-      </div>
-      <footer className="w-full py-6 px-4 md:px-8 bg-card-dark text-text-light text-opacity-60 text-center text-sm border-t border-gray-700 mt-auto no-print">
-        <p>&copy; {new Date().getFullYear()} Wonky Sprout OS by classicwilly. Anti-BS Structure for Chaos.</p>
-      </footer>
-      <SystemResetModal isOpen={isResetModalOpen} onClose={handleCloseResetModal} />
+      <Header openResetModal={() => setResetModalOpen(true)} />
+      <main id="main-content" className="flex-grow container mx-auto px-4 py-8 md:px-6 relative">
+        {renderView()}
+      </main>
+      <SystemResetModal isOpen={isResetModalOpen} onClose={() => setResetModalOpen(false)} />
       <ScrollToTopButton />
     </div>
   );
-}
-
-const App: React.FC = () => {
-  return (
-    <AppStateProvider>
-      <AppContent />
-    </AppStateProvider>
-  );
 };
+
+const App: React.FC = () => (
+  <AppStateProvider>
+    <AppContent />
+  </AppStateProvider>
+);
 
 export default App;
