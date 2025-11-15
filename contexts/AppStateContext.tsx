@@ -1,3 +1,6 @@
+// FIX: Add vite client types reference to resolve 'import.meta.env' error.
+/// <reference types="vite/client" />
+
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { auth, db } from '../firebase';
 import { defaultUserState } from '../defaultStates'; // Import from new file
@@ -435,6 +438,27 @@ const { currentStreak, longestStreak } = recalculateStreaks(habitId, newLog); re
 const AppStateContext = createContext(undefined);
 
 export const AppStateProvider = ({ children }) => {
+  // --- DEV MODE BYPASS ---
+  if (import.meta.env.DEV) {
+    // Start with default state but ensure setup is marked as complete for dev
+    const initialState = { ...defaultUserState, initialSetupComplete: true };
+    const [devState, devDispatch] = useReducer(userReducer, initialState);
+    const devAuthUser = { uid: 'dev-user', email: 'dev@wonky-sprout.os' };
+
+    const contextValue = {
+      authUser: devAuthUser,
+      appState: devState,
+      dispatch: devDispatch
+    };
+
+    return (
+      <AppStateContext.Provider value={contextValue}>
+        {children}
+      </AppStateContext.Provider>
+    );
+  }
+
+  // --- PRODUCTION/NORMAL LOGIC ---
   const [authUser, setAuthUser] = React.useState(undefined);
   const [appState, setAppState] = React.useState(null);
 
