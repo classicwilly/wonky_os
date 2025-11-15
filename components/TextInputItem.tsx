@@ -1,18 +1,16 @@
+
+
+
 import React from 'react';
-import { useAppState } from '../contexts/AppStateContext.tsx';
+import { useAppState } from '../contexts/AppStateContext.js';
 
-interface TextInputItemProps {
-    id: string;
-    label: string;
-    placeholder?: string;
-    type?: 'text' | 'tel';
-}
 
-const TextInputItem: React.FC<TextInputItemProps> = ({ id, label, placeholder, type = 'text' }) => {
+
+const TextInputItem = ({ id, label, placeholder, type = 'text' }) => {
     const { appState, dispatch } = useAppState();
     const value = appState.textInputs[id] || '';
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (e) => {
         dispatch({ type: 'SET_TEXT_INPUT', payload: { id, value: e.target.value } });
     };
 

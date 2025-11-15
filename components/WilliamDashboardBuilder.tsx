@@ -1,22 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { useAppState } from '../contexts/AppStateContext.tsx';
-import { ALL_WILLIAM_MODULES_CONFIG } from '../constants.tsx';
-import { ModuleKey } from '../types.tsx';
-import ContentCard from './ContentCard.tsx';
 
-const WilliamDashboardBuilder: React.FC = () => {
+import React, { useState, useEffect } from 'react';
+import { useAppState } from '../contexts/AppStateContext.js';
+import { ALL_WILLIAM_MODULES_CONFIG } from '../constants.js';
+
+// FIX: Explicitly typed component with React.FC and a props interface to handle the `key` prop correctly.
+interface TabButtonProps {
+    label: string;
+    isActive: boolean;
+    onClick: () => void;
+}
+const TabButton: React.FC<TabButtonProps> = ({ label, isActive, onClick }) => (
+    <button
+        onClick={onClick}
+        className={`whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm transition-colors
+            ${isActive
+                ? 'border-accent-blue text-accent-blue'
+                : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500'
+            }`}
+    >
+        {label}
+    </button>
+);
+
+const WilliamDashboardBuilder = () => {
   const { appState, dispatch } = useAppState();
   const { williamDashboardModules } = appState;
 
-  // Local state for changes before saving
-  const [tempEnabledModules, setTempEnabledModules] = useState<ModuleKey[]>(williamDashboardModules);
+  const [tempEnabledModules, setTempEnabledModules] = useState(williamDashboardModules);
+  const [activeTab, setActiveTab] = useState('core');
 
-  // Sync temp state with global state if global state changes (e.g., reset)
   useEffect(() => {
     setTempEnabledModules(williamDashboardModules);
   }, [williamDashboardModules]);
 
-  const handleToggleModule = (moduleId: ModuleKey, enable: boolean) => {
+  const handleToggleModule = (moduleId, enable) => {
     setTempEnabledModules(prev => {
       if (enable && !prev.includes(moduleId)) {
         return [...prev, moduleId];
@@ -30,104 +47,74 @@ const WilliamDashboardBuilder: React.FC = () => {
 
   const handleSave = () => {
     dispatch({ type: 'SET_WILL_DASHBOARD_MODULES', payload: tempEnabledModules });
-    dispatch({ type: 'SET_VIEW', payload: 'williams-dashboard' }); // Navigate back
+    dispatch({ type: 'SET_VIEW', payload: 'operations-control' });
   };
 
   const handleCancel = () => {
-    // Revert to the current saved state and navigate back
-    setTempEnabledModules(williamDashboardModules); // Revert local changes
-    dispatch({ type: 'SET_VIEW', payload: 'williams-dashboard' }); // Navigate back
+    setTempEnabledModules(williamDashboardModules);
+    dispatch({ type: 'SET_VIEW', payload: 'operations-control' });
   };
+  
+  const moduleCategories = {
+    core: 'Core',
+    trackers: 'Trackers',
+    utilities: 'Utilities',
+    checklists: 'Checklists',
+    content: 'Content',
+    selection: 'Selectors',
+  };
+
+  const modulesForTab = ALL_WILLIAM_MODULES_CONFIG.filter(m => m.category === activeTab);
 
   return (
     <div className="max-w-4xl mx-auto py-8">
       <header className="text-center mb-10">
         <h1 className="text-4xl md:text-5xl font-extrabold text-accent-teal mb-4">Customize William's Dashboard</h1>
         <p className="text-lg text-text-light text-opacity-80">
-          Select the modules you want active on your personal dashboard. Toggle them on/off as needed.
+          Select the modules you want active on your personal dashboard. Core modules cannot be disabled.
         </p>
       </header>
-
-      <div className="space-y-6">
-        <ContentCard title="Core Modules" titleClassName="text-accent-green text-2xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {ALL_WILLIAM_MODULES_CONFIG.filter(m => m.category === 'core').map(module => (
-              <div key={module.id} className="flex items-center justify-between p-3 bg-gray-800 rounded-md border border-gray-700">
-                <div>
-                  <h3 className="font-semibold text-accent-blue">{module.name}</h3>
-                  <p className="text-sm text-text-light text-opacity-70">{module.description}</p>
-                </div>
-                <label className="relative inline-flex items-center cursor-pointer ml-4">
-                  <input
-                    type="checkbox"
-                    value=""
-                    className="sr-only peer"
-                    checked={tempEnabledModules.includes(module.id)}
-                    onChange={(e) => handleToggleModule(module.id, e.target.checked)}
-                    disabled={module.id === 'william-core-dashboard-module'} // Core module cannot be disabled
-                  />
-                  <div className={`w-11 h-6 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-accent-blue/50 ${
-                    tempEnabledModules.includes(module.id) ? 'bg-accent-blue' : 'bg-gray-600'
-                  } peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all ${
-                    module.id === 'william-core-dashboard-module' ? 'cursor-not-allowed opacity-50' : ''
-                  }`}></div>
-                </label>
+      
+      <div className="bg-card-dark rounded-lg border border-gray-700">
+        <div className="border-b border-gray-700">
+            <nav className="-mb-px flex space-x-2 px-4 overflow-x-auto" aria-label="Tabs">
+                {Object.entries(moduleCategories).map(([key, label]) => {
+                     const modulesInCategory = ALL_WILLIAM_MODULES_CONFIG.filter(m => m.category === key);
+                     if (modulesInCategory.length === 0) return null;
+                     return <TabButton key={key} label={label} isActive={activeTab === key} onClick={() => setActiveTab(key)} />;
+                })}
+            </nav>
+        </div>
+        <div className="p-4">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {modulesForTab.map(module => (
+                  <div key={module.id} className={`flex items-center justify-between p-3 bg-gray-800 rounded-md border border-gray-700 ${!module.isRemovable ? 'opacity-70' : ''}`}>
+                    <div>
+                      <h3 className="font-semibold text-accent-blue">
+                        {module.name} {!module.isRemovable && <span className="text-xs text-gray-400">(Core)</span>}
+                      </h3>
+                      <p className="text-sm text-text-light text-opacity-70">{module.description}</p>
+                    </div>
+                    <label className={`relative inline-flex items-center ml-4 ${!module.isRemovable ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+                      <input
+                        type="checkbox"
+                        value=""
+                        className="sr-only peer"
+                        checked={tempEnabledModules.includes(module.id)}
+                        onChange={(e) => handleToggleModule(module.id, e.target.checked)}
+                        disabled={!module.isRemovable}
+                      />
+                      <div className={`w-11 h-6 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-accent-blue/50 ${
+                        tempEnabledModules.includes(module.id) ? 'bg-accent-blue' : 'bg-gray-600'
+                      } peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
+                    </label>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </ContentCard>
+        </div>
+      </div>
 
-        <ContentCard title="Tracker Modules" titleClassName="text-accent-green text-2xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {ALL_WILLIAM_MODULES_CONFIG.filter(m => m.category === 'trackers').map(module => (
-              <div key={module.id} className="flex items-center justify-between p-3 bg-gray-800 rounded-md border border-gray-700">
-                <div>
-                  <h3 className="font-semibold text-accent-blue">{module.name}</h3>
-                  <p className="text-sm text-text-light text-opacity-70">{module.description}</p>
-                </div>
-                <label className="relative inline-flex items-center cursor-pointer ml-4">
-                  <input
-                    type="checkbox"
-                    value=""
-                    className="sr-only peer"
-                    checked={tempEnabledModules.includes(module.id)}
-                    onChange={(e) => handleToggleModule(module.id, e.target.checked)}
-                  />
-                  <div className={`w-11 h-6 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-accent-blue/50 ${
-                    tempEnabledModules.includes(module.id) ? 'bg-accent-blue' : 'bg-gray-600'
-                  } peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
-                </label>
-              </div>
-            ))}
-          </div>
-        </ContentCard>
-
-        <ContentCard title="Utility Modules" titleClassName="text-accent-green text-2xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {ALL_WILLIAM_MODULES_CONFIG.filter(m => m.category === 'utilities').map(module => (
-              <div key={module.id} className="flex items-center justify-between p-3 bg-gray-800 rounded-md border border-gray-700">
-                <div>
-                  <h3 className="font-semibold text-accent-blue">{module.name}</h3>
-                  <p className="text-sm text-text-light text-opacity-70">{module.description}</p>
-                </div>
-                <label className="relative inline-flex items-center cursor-pointer ml-4">
-                  <input
-                    type="checkbox"
-                    value=""
-                    className="sr-only peer"
-                    checked={tempEnabledModules.includes(module.id)}
-                    onChange={(e) => handleToggleModule(module.id, e.target.checked)}
-                  />
-                  <div className={`w-11 h-6 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-accent-blue/50 ${
-                    tempEnabledModules.includes(module.id) ? 'bg-accent-blue' : 'bg-gray-600'
-                  } peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
-                </label>
-              </div>
-            ))}
-          </div>
-        </ContentCard>
-
-        <div className="flex justify-end space-x-4 mt-8">
+      <div className="flex justify-end space-x-4 mt-8">
           <button
             onClick={handleCancel}
             className="px-6 py-3 bg-gray-700 text-text-light rounded-md hover:bg-gray-600 transition-colors duration-200 font-semibold"
@@ -140,7 +127,6 @@ const WilliamDashboardBuilder: React.FC = () => {
           >
             Save Changes
           </button>
-        </div>
       </div>
     </div>
   );

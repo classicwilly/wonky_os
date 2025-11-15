@@ -1,23 +1,22 @@
+
 import React, { useState } from 'react';
 import { GoogleGenAI } from "@google/genai";
-import ContentCard from '../ContentCard.tsx'; // Adjusted path
+import ContentCard from '../ContentCard.js'; // Adjusted path
+import { SecureMarkdown } from '../../utils/secureMarkdownRenderer.js';
+import { useAIPromptSafety } from '../../hooks/useAIPromptSafety.js';
+import AIConsentModal from '../AIConsentModal.js';
+import PIIWarningModal from '../PIIWarningModal.js';
 
-// Simple markdown-to-HTML parser for Wonky AI
-const parseWonkyMarkdown = (text: string) => {
-    return text
-        .replace(/^# (.*?)$/gm, '<h1 class="text-2xl font-bold mt-4 mb-2">$1</h1>') // H1
-        .replace(/^## (.*?)$/gm, '<h2 class="text-xl font-bold mt-3 mb-1">$1</h2>') // H2
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold
-        .replace(/\n\s*(\*|-)\s/g, '<br>• ') // List items
-        .replace(/\n/g, '<br />'); // Newlines
-};
-
-
-const WonkyAIModule: React.FC = () => {
+const WonkyAIModule = () => {
     const [prompt, setPrompt] = useState('');
     const [loading, setLoading] = useState(false);
     const [response, setResponse] = useState('');
     const [error, setError] = useState('');
+    const { 
+        checkAndExecute, 
+        isPiiModalOpen, piiMatches, handlePiiConfirm, handlePiiCancel,
+        isConsentModalOpen, handleConfirm, handleCancel, dontShowAgain, setDontShowAgain 
+    } = useAIPromptSafety();
 
     const systemInstruction = `You are "Wonky AI," an assistant for a neurodivergent systems diagnostician named William. Your core philosophy is "Structure Engineered for Chaos" and "Anti-BS." Your responses MUST be:
 1.  **Direct and Unambiguous:** No fluff, no motivational platitudes ("You can do it!"). Use clear, concise language. State facts.
@@ -30,9 +29,9 @@ Your Response Style:
 "Acknowledged. Executive dysfunction triggered. Initiating 'Office Reset Protocol'.
 **Diagnosis:** The task 'clean office' is too large and undefined, causing paralysis.
 **Solution:** Reframe as a sequence of micro-tasks.
-* Pick up ONE piece of trash off the floor.
-* Put ONE item on your desk back where it belongs.
-* Set a 5-minute timer.
+- Pick up ONE piece of trash off the floor.
+- Put ONE item on your desk back where it belongs.
+- Set a 5-minute timer.
 Execute the first step now."
 Your primary function is to be a tool that provides structure, not a coach that provides encouragement.`;
 
@@ -54,15 +53,27 @@ Your primary function is to be a tool that provides structure, not a coach that 
                 }
             });
             setResponse(result.text);
-        } catch (e: any) {
+        } catch (e) {
             setError(`Error: ${e.message || 'Failed to communicate with the AI model.'}`);
             console.error(e);
         }
         setLoading(false);
     };
+    
+    const handleSubmit = () => {
+        checkAndExecute(prompt, handleGenerate);
+    };
+
+    const handleEnterPress = (e) => {
+        if (e.key === 'Enter' && !loading) {
+            handleSubmit();
+        }
+    };
 
     return (
         <ContentCard title="🧠 Wonky AI Assistant">
+            {isConsentModalOpen && <AIConsentModal onConfirm={handleConfirm} onCancel={handleCancel} dontShowAgain={dontShowAgain} setDontShowAgain={setDontShowAgain} />}
+            {isPiiModalOpen && <PIIWarningModal isOpen={isPiiModalOpen} onCancel={handlePiiCancel} onConfirm={handlePiiConfirm} matches={piiMatches} />}
             <div className="flex flex-col h-full">
                 <div className="flex-grow overflow-y-auto p-4 bg-gray-800 rounded-md min-h-[200px] max-h-[400px] border border-gray-700 mb-4">
                     {loading ? (
@@ -73,7 +84,9 @@ Your primary function is to be a tool that provides structure, not a coach that 
                     ) : error ? (
                          <div className="text-red-400 whitespace-pre-wrap"><p className="font-bold mb-2">System Error:</p>{error}</div>
                     ) : response ? (
-                        <div className="whitespace-pre-wrap prose prose-invert prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: parseWonkyMarkdown(response) }}></div>
+                        <div className="prose prose-invert prose-sm max-w-none">
+                            <SecureMarkdown content={response} />
+                        </div>
                     ) : (
                         <p className="text-text-light text-opacity-60 text-center flex items-center justify-center h-full">
                             Define a problem. Wonky AI will provide structure.
@@ -85,17 +98,17 @@ Your primary function is to be a tool that provides structure, not a coach that 
                         type="text"
                         value={prompt}
                         onChange={(e) => setPrompt(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && !loading && handleGenerate()}
+                        onKeyDown={handleEnterPress}
                         placeholder="Describe the chaos..."
                         className="flex-grow p-3 bg-gray-800 border border-gray-700 rounded-md text-text-light placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-blue"
                         disabled={loading}
                     />
                     <button
-                        onClick={handleGenerate}
+                        onClick={handleSubmit}
                         disabled={loading}
                         className="px-6 py-3 bg-accent-blue text-background-dark rounded-md hover:bg-blue-400 transition-colors duration-200 font-semibold disabled:bg-gray-600 disabled:cursor-not-allowed"
                     >
-                        {loading ? 'Executing...' : 'Generate'}
+                        {loading ? '...' : '✨ Ask AI'}
                     </button>
                 </div>
             </div>

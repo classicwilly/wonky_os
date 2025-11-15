@@ -2,7 +2,6 @@
   "name": "Wonky Sprout OS",
   "description": "An engineering solution for neurodivergent life management. This is a public SOP vault designed to transform chaos into structure.",
   "requestFramePermissions": [
-    "camera",
     "microphone"
   ]
 }

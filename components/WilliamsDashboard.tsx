@@ -1,37 +1,98 @@
+
 import React from 'react';
-import { useAppState } from '../contexts/AppStateContext.tsx';
-import { ALL_WILLIAM_MODULES_CONFIG } from '../constants.tsx';
-import ContentCard from './ContentCard.tsx'; // Assuming ContentCard is a general utility
-import { useCurrentMode } from '../hooks/useCurrentMode.tsx'; // To provide context to child modules if needed
-import { ViewType } from '../types.tsx'; // For setting view when customizing
+import { useAppState } from '../contexts/AppStateContext.js';
+import { useSystemHealth } from '../hooks/useSystemHealth.js';
+import ModuleIcon from './ModuleIcon.js';
+import { ALL_WILLIAM_MODULES_CONFIG } from '../constants.js';
+import { useProactiveAI } from '../hooks/useProactiveAI.js';
+import SystemNudgeModule from './modules/william/SystemNudgeModule.js';
+import ContentCard from './ContentCard.js';
 
-const WilliamsDashboard: React.FC = () => {
+// Import modules needed for the new layout
+import StatusTrackerModule from './modules/StatusTrackerModule.js';
+import DayProgressBarModule from './modules/DayProgressBarModule.js';
+import WonkyAIModule from './modules/WonkyAIModule.js';
+
+
+const SystemVitals = () => {
+    const { appState } = useAppState();
+    const { statusMood, statusEnergy } = appState;
+    const { score, stateColor } = useSystemHealth();
+
+    const moodIcon = statusMood === 'Focused' ? '🎯' : statusMood === 'Calm' ? '😌' : '🧠';
+    const energyIcon = statusEnergy === 'High' ? '⚡️' : statusEnergy === 'Medium' ? '🔋' : '🔌';
+
+    return (
+        <ContentCard title="System Vitals" showHeader={false}>
+            <div className="grid grid-cols-3 gap-4 text-center">
+                <div>
+                    <p className={`text-4xl font-bold ${stateColor}`}>{score}</p>
+                    <p className={`text-sm font-semibold ${stateColor}`}>Health</p>
+                </div>
+                <div>
+                    <p className="text-4xl">{moodIcon}</p>
+                    <p className="text-sm font-semibold">{statusMood || 'N/A'}</p>
+                </div>
+                <div>
+                    <p className="text-4xl">{energyIcon}</p>
+                    <p className="text-sm font-semibold">{statusEnergy || 'N/A'}</p>
+                </div>
+            </div>
+        </ContentCard>
+    );
+};
+
+// FIX: Typed as React.FC to handle key prop correctly.
+const ModuleLauncher: React.FC = () => {
+    const { appState, dispatch } = useAppState();
+    const { williamDashboardModules } = appState;
+
+    const launchableModules = ALL_WILLIAM_MODULES_CONFIG.filter(module =>
+        williamDashboardModules.includes(module.id)
+    );
+
+    const handleLaunch = (moduleId) => {
+        dispatch({ type: 'SET_VIEW', payload: `view-${moduleId}` });
+    };
+
+    return (
+        <ContentCard title="Module Launcher">
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4">
+                {launchableModules.map(module => (
+                    <ModuleIcon
+                        key={module.id}
+                        iconPath={module.icon}
+                        label={module.name}
+                        onClick={() => handleLaunch(module.id)}
+                    />
+                ))}
+            </div>
+        </ContentCard>
+    );
+};
+
+
+const WilliamsDashboard = () => {
   const { appState, dispatch } = useAppState();
-  const { williamDashboardModules, isModMode } = appState;
-  const currentMode = useCurrentMode(); // Pass to modules if they need it
+  const { isModMode } = appState;
+  const allNudges = useProactiveAI(appState, dispatch);
 
+  const handleDismissNudge = (nudgeId) => {
+    dispatch({ type: 'DISMISS_NUDGE', payload: nudgeId });
+  };
+  
   const handleCustomizeDashboard = () => {
     dispatch({ type: 'SET_VIEW', payload: 'william-dashboard-builder' });
   };
 
-  const enabledModules = williamDashboardModules
-    .map(moduleId => ALL_WILLIAM_MODULES_CONFIG.find(m => m.id === moduleId))
-    .filter(Boolean); // Filter out any undefined modules if IDs don't match config
-
-  const getGridColsClass = (count: number) => {
-    if (count <= 1) return 'grid-cols-1';
-    if (count === 2) return 'grid-cols-1 md:grid-cols-2';
-    if (count === 3) return 'grid-cols-1 md:grid-cols-3';
-    // More complex layouts could be added if needed, e.g., 2 large + 2 small
-    return 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'; // Default for 4+ modules
-  };
+  const currentNudge = allNudges.length > 0 ? allNudges[0] : null;
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-7xl mx-auto">
       <header className="text-center mb-10 relative">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-accent-teal mb-4">William's Dashboard</h1>
+        <h1 className="text-4xl md:text-5xl font-extrabold text-accent-teal mb-4">Operations Control</h1>
         <p className="text-lg text-text-light text-opacity-80">
-          Your personalized operations center. Configure your view to optimize focus and execution.
+          Your central command interface. All systems nominal.
         </p>
         {isModMode && (
           <button
@@ -43,19 +104,23 @@ const WilliamsDashboard: React.FC = () => {
           </button>
         )}
       </header>
-
-      <div className={`grid gap-6 ${getGridColsClass(enabledModules.length)}`}>
-        {enabledModules.map(moduleConfig => {
-          if (!moduleConfig) return null; // Should not happen with filter(Boolean) but good for safety
-          const ModuleComponent = moduleConfig.component;
-          // Dynamically render the component. Pass props if needed.
-          return (
-            <ModuleComponent 
-              key={moduleConfig.id} 
-              currentMode={currentMode} // Example: passing currentMode to modules that need it
+      
+      <div className="space-y-6">
+        {currentNudge && (
+            <SystemNudgeModule
+                nudge={currentNudge}
+                onDismiss={handleDismissNudge}
             />
-          );
-        })}
+        )}
+        <SystemVitals />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <StatusTrackerModule />
+            <DayProgressBarModule />
+        </div>
+        <ContentCard title="🧠 Wonky AI Assistant">
+            <WonkyAIModule />
+        </ContentCard>
+        <ModuleLauncher />
       </div>
     </div>
   );

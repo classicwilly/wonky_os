@@ -1,14 +1,12 @@
-import React from 'react';
-import { useAppState } from '../../contexts/AppStateContext.tsx'; // Adjusted path
-import { KidLocation } from '../../types.tsx'; // Adjusted path
-import ContentCard from '../ContentCard.tsx'; // Adjusted path
-import TextInputItem from '../TextInputItem.tsx'; // Adjusted path
 
-const StatusButton: React.FC<{
-    label: string;
-    isActive: boolean;
-    onClick: () => void;
-}> = ({ label, isActive, onClick }) => {
+
+import React from 'react';
+import { useAppState } from '../../contexts/AppStateContext.js'; // Adjusted path
+
+import ContentCard from '../ContentCard.js'; // Adjusted path
+import TextInputItem from '../TextInputItem.js'; // Adjusted path
+
+const StatusButton = ({ label, isActive, onClick }) => {
     const baseClass = 'px-2 py-1 rounded-md text-xs font-semibold transition-colors w-full break-words';
     const activeClass = 'bg-accent-blue text-background-dark';
     const inactiveClass = 'bg-gray-700 hover:bg-gray-600';
@@ -19,19 +17,14 @@ const StatusButton: React.FC<{
     );
 };
 
-const KidStatus: React.FC<{ 
-    name: 'Willow' | 'Sebastian';
-    idPrefix: string;
-    emoji: string;
-}> = ({ name, idPrefix, emoji }) => {
+const KidStatus = ({ name, idPrefix, emoji }) => {
     const { appState, dispatch } = useAppState();
     const isWillow = name === 'Willow';
     const location = isWillow ? appState.kidsWillowLocation : appState.kidsSebastianLocation;
     
-    const setLocation = (loc: KidLocation) => {
+    const setLocation = (loc) => {
         dispatch({
-            type: 'SET_KID_LOCATION',
-            payload: { kid: isWillow ? 'willow' : 'sebastian', location: loc }
+            type: 'SET_KID_LOCATION', payload: { kid: isWillow ? 'willow' : 'sebastian', location: loc }
         });
     };
 
@@ -48,7 +41,7 @@ const KidStatus: React.FC<{
     );
 };
 
-const KidsTrackerModule: React.FC = () => {
+const KidsTrackerModule = () => {
     return (
         <ContentCard title="👨‍👧‍👦 Kids Status">
             <div className="space-y-4">

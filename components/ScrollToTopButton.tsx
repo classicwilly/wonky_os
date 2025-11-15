@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 
-const ScrollToTopButton: React.FC = () => {
+const ScrollToTopButton = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   const toggleVisibility = () => {

@@ -1,11 +1,9 @@
 import React from 'react';
 
-interface QuickJumpProps {
-  sections: { id: string; title: string }[];
-}
 
-const QuickJump: React.FC<QuickJumpProps> = ({ sections }) => {
-  const handleJump = (id: string) => {
+
+const QuickJump = ({ sections }) => {
+  const handleJump = (id) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });

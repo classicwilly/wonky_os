@@ -1,8 +1,9 @@
-import React from 'react';
-import GemCollector from '../../GemCollector.tsx'; // Adjusted path
-import { useAppState } from '../../../contexts/AppStateContext.tsx'; // Adjusted path
 
-const WillowGemCollectorModule: React.FC = () => {
+import React from 'react';
+import GemCollector from '../../GemCollector.js'; // Adjusted path
+import { useAppState } from '../../../contexts/AppStateContext.js'; // Adjusted path
+
+const WillowGemCollectorModule = () => {
     const { appState } = useAppState();
     const { collectedGems } = appState;
 

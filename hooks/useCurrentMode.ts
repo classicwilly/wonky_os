@@ -1,9 +1,9 @@
+
 import { useState, useEffect } from 'react';
 
-export type OperatingMode = 'Solo Execution' | 'Family Structure';
 
-export function useCurrentMode(): OperatingMode {
-  const [currentMode, setCurrentMode] = useState<OperatingMode>(getModeForDate(new Date()));
+export function useCurrentMode() {
+  const [currentMode, setCurrentMode] = useState(getModeForDate(new Date()));
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -17,7 +17,7 @@ export function useCurrentMode(): OperatingMode {
 }
 
 // FIX: Exported getModeForDate to be used in SharedCalendar.tsx.
-export function getModeForDate(date: Date): OperatingMode {
+export function getModeForDate(date) {
   const day = date.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
   const hour = date.getHours();
 

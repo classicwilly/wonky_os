@@ -1,30 +1,32 @@
-import React, { useState, useMemo } from 'react';
-import { useAppState } from '../../../contexts/AppStateContext.tsx';
-import { CalendarEvent } from '../../../types.tsx';
-import ContentCard from '../../ContentCard.tsx';
-import { getModeForDate } from '../../../hooks/useCurrentMode.tsx';
 
-const eventTypeColors: { [key in CalendarEvent['type']]: string } = {
+import React, { useState, useMemo } from 'react';
+import { useAppState } from '../../../contexts/AppStateContext.js';
+
+import ContentCard from '../../ContentCard.js';
+import { getModeForDate } from '../../../hooks/useCurrentMode.js';
+
+const eventTypeColors = {
     appointment: 'bg-accent-blue',
     school: 'bg-accent-green',
     handoff: 'bg-accent-teal',
     other: 'bg-gray-500',
+    'task-block': 'bg-accent-purple',
 };
 
 
-const SharedCalendarModule: React.FC = () => {
+const SharedCalendarModule = () => {
     const { appState, dispatch } = useAppState();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [newEventTitle, setNewEventTitle] = useState('');
     const [newEventDate, setNewEventDate] = useState(new Date().toISOString().split('T')[0]);
     const [newEventTime, setNewEventTime] = useState('12:00');
-    const [newEventType, setNewEventType] = useState<CalendarEvent['type']>('appointment');
+    const [newEventType, setNewEventType] = useState('appointment');
 
     const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
     const firstDayOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1).getDay();
 
-    const handleAddEvent = (e: React.FormEvent) => {
+    const handleAddEvent = (e) => {
         e.preventDefault();
         if (!newEventTitle || !newEventDate) return;
         
@@ -40,7 +42,7 @@ const SharedCalendarModule: React.FC = () => {
         setNewEventTitle('');
     };
 
-    const handleRemoveEvent = (eventId: string) => {
+    const handleRemoveEvent = (eventId) => {
         dispatch({ type: 'REMOVE_CALENDAR_EVENT', payload: eventId });
     };
 
@@ -87,7 +89,7 @@ const SharedCalendarModule: React.FC = () => {
         return days;
     }, [currentDate, appState.calendarEvents, selectedDate]);
 
-    const changeMonth = (delta: number) => {
+    const changeMonth = (delta) => {
         setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() + delta, 1));
     };
     
@@ -123,7 +125,7 @@ const SharedCalendarModule: React.FC = () => {
                             <input type="date" value={newEventDate} onChange={e => setNewEventDate(e.target.value)} className="w-full p-2 bg-gray-900 border border-gray-600 rounded" required/>
                             <input type="time" value={newEventTime} onChange={e => setNewEventTime(e.target.value)} className="p-2 bg-gray-900 border border-gray-600 rounded" required/>
                         </div>
-                        <select value={newEventType} onChange={e => setNewEventType(e.target.value as CalendarEvent['type'])} className="w-full p-2 bg-gray-900 border border-gray-600 rounded">
+                        <select value={newEventType} onChange={e => setNewEventType(e.target.value)} className="w-full p-2 bg-gray-900 border border-gray-600 rounded">
                             <option value="appointment">Appointment</option>
                             <option value="school">School Event</option>
                             <option value="handoff">Handoff</option>

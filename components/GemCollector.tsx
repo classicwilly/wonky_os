@@ -1,8 +1,15 @@
-import React from 'react';
-import ContentCard from './ContentCard.tsx';
-import { ALL_GEMS, REWARD_TIERS } from '../constants.tsx';
 
-const Gem: React.FC<{ emoji: string; label: string; collected: boolean }> = ({ emoji, label, collected }) => {
+import React from 'react';
+import ContentCard from './ContentCard.js';
+import { ALL_GEMS, REWARD_TIERS } from '../constants.js';
+
+// FIX: Explicitly typed the component with React.FC and a props interface to handle the `key` prop correctly.
+interface GemProps {
+    emoji: string;
+    label: string;
+    collected: boolean;
+}
+const Gem: React.FC<GemProps> = ({ emoji, label, collected }) => {
     return (
         <div className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${collected ? 'bg-accent-green bg-opacity-20' : 'bg-gray-800'}`}>
             <div className={`text-4xl transition-all duration-500 ${collected ? 'grayscale-0' : 'grayscale'}`}>{emoji}</div>
@@ -11,12 +18,9 @@ const Gem: React.FC<{ emoji: string; label: string; collected: boolean }> = ({ e
     );
 };
 
-interface GemCollectorProps {
-    name: string;
-    collectedGems: string[];
-}
 
-const GemCollector: React.FC<GemCollectorProps> = ({ name, collectedGems }) => {
+
+const GemCollector = ({ name, collectedGems }) => {
     const collectedCount = collectedGems.length;
     const totalCount = ALL_GEMS.length;
 

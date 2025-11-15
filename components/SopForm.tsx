@@ -1,231 +1,240 @@
-import React, { useState } from 'react';
-import { Sop } from '../types.tsx';
-import { useAppState } from '../contexts/AppStateContext.tsx';
 
-const SopForm: React.FC = () => {
+
+import React, { useState, useEffect, useMemo } from 'react';
+
+import { useAppState } from '../contexts/AppStateContext.js';
+import { SOP_DATA } from '../constants.js';
+
+const SopForm = () => {
+  const { appState, dispatch } = useAppState();
+  const { generatedSopDraft, editingSopId, userSops, modifiedSops, activeSopTemplate } = appState;
+  
+  const isEditMode = editingSopId !== null;
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [steps, setSteps] = useState<string[]>(['']); // Start with one empty step input
-  const [cues, setCues] = useState<string[]>(['']); // Start with one empty cue input
-  const [error, setError] = useState<string | null>(null);
-  const { dispatch } = useAppState();
+  const [steps, setSteps] = useState(['']);
+  const [cues, setCues] = useState(['']);
+  const [taskTemplate, setTaskTemplate] = useState([]);
+  const [isPageView, setIsPageView] = useState(false);
+  const [isTemplate, setIsTemplate] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleStepChange = (index: number, value: string) => {
+  const allSops = useMemo(() => 
+    SOP_DATA.map(sop => modifiedSops[sop.id] || sop).concat(userSops),
+    [modifiedSops, userSops]
+  );
+
+  const isEditingCoreSop = useMemo(() => 
+    isEditMode && SOP_DATA.some(s => s.id === editingSopId),
+    [isEditMode, editingSopId]
+  );
+  
+  const isCoreSopModified = useMemo(() =>
+    isEditingCoreSop && !!modifiedSops[editingSopId],
+    [isEditingCoreSop, modifiedSops, editingSopId]
+  );
+
+  useEffect(() => {
+    let sopToLoad = null;
+
+    if (isEditMode) {
+      sopToLoad = allSops.find(s => s.id === editingSopId) || null;
+    } else if (generatedSopDraft) {
+      sopToLoad = { ...generatedSopDraft, id: '', category: '' }; // Adapt draft to SOP-like structure
+      dispatch({ type: 'SET_GENERATED_SOP_DRAFT', payload: null });
+    } else if (activeSopTemplate) {
+      sopToLoad = activeSopTemplate;
+      dispatch({ type: 'SET_ACTIVE_SOP_TEMPLATE', payload: null });
+    }
+
+    if (sopToLoad) {
+        setTitle(sopToLoad.title);
+        setDescription(sopToLoad.description);
+        setSteps((sopToLoad.steps || ['']).map(s => s.replace(/^\d+\.\s/, '')));
+        setCues(sopToLoad.cues || ['']);
+        setTaskTemplate(sopToLoad.taskTemplate || []);
+        setIsPageView(sopToLoad.isPageView || false);
+        setIsTemplate(false);
+    }
+    
+  }, [editingSopId, allSops, generatedSopDraft, activeSopTemplate, dispatch, isEditMode]);
+
+
+  const handleStepChange = (index, value) => {
     const newSteps = [...steps];
     newSteps[index] = value;
     setSteps(newSteps);
   };
 
-  const handleAddStep = () => {
-    setSteps([...steps, '']);
-  };
-
-  const handleRemoveStep = (index: number) => {
+  const handleAddStep = () => setSteps([...steps, '']);
+  const handleRemoveStep = (index) => {
     const newSteps = steps.filter((_, i) => i !== index);
-    setSteps(newSteps.length === 0 ? [''] : newSteps); // Ensure at least one input remains
+    setSteps(newSteps.length === 0 ? [''] : newSteps);
   };
 
-  const handleCueChange = (index: number, value: string) => {
+  const handleCueChange = (index, value) => {
     const newCues = [...cues];
     newCues[index] = value;
     setCues(newCues);
   };
 
-  const handleAddCue = () => {
-    setCues([...cues, '']);
-  };
-
-  const handleRemoveCue = (index: number) => {
+  const handleAddCue = () => setCues([...cues, '']);
+  const handleRemoveCue = (index) => {
     const newCues = cues.filter((_, i) => i !== index);
-    setCues(newCues.length === 0 ? [''] : newCues); // Ensure at least one input remains
+    setCues(newCues.length === 0 ? [''] : newCues);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleTaskTemplateChange = (index, field, value) => {
+    const newTemplate = [...taskTemplate];
+    newTemplate[index] = { ...newTemplate[index], [field]: value };
+    setTaskTemplate(newTemplate);
+  };
+  
+  const handleAddTaskToTemplate = () => setTaskTemplate([...taskTemplate, { title: '', priority: 'Medium' }]);
+  const handleRemoveTaskFromTemplate = (index) => setTaskTemplate(taskTemplate.filter((_, i) => i !== index));
+
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError(null);
 
     const filteredSteps = steps.filter(step => step.trim() !== '');
     const filteredCues = cues.filter(cue => cue.trim() !== '');
+    const filteredTaskTemplate = taskTemplate.filter(task => task.title.trim() !== '');
 
-    if (!title.trim() || !description.trim() || filteredSteps.length === 0) {
-      setError('Title, description, and at least one step are required. Execute fully.');
+    if (!title.trim() || !description.trim()) {
+      setError('Title and description are required. Execute fully.');
       return;
     }
 
-    // Automatically prepend step numbers to each step content
     const formattedStepsForSop = filteredSteps.map((stepContent, index) => `${index + 1}. ${stepContent}`);
 
-    const newSop: Sop = {
-      id: String(Date.now()), // Unique ID generation
-      category: 'M4_SOP_USER', // Category for user-defined SOPs
-      title: title.trim(),
-      description: description.trim(),
-      steps: formattedStepsForSop, // Use the formatted steps with prepended numbers
-      cues: filteredCues.length > 0 ? filteredCues : undefined,
+    const newSopData = {
+        title: title.trim(),
+        description: description.trim(),
+        steps: formattedStepsForSop.length > 0 ? formattedStepsForSop : undefined,
+        cues: filteredCues.length > 0 ? filteredCues : undefined,
+        taskTemplate: filteredTaskTemplate.length > 0 ? filteredTaskTemplate : undefined,
+        isPageView: isTemplate ? false : isPageView,
     };
 
-    dispatch({ type: 'ADD_SOP', payload: newSop });
-    handleClearForm(); // Reset form after submission
+    if (isEditMode) {
+      const originalSop = allSops.find(s => s.id === editingSopId);
+      const updatedSop = { ...originalSop, ...newSopData, id: editingSopId };
+
+      if (originalSop.category.includes('USER')) {
+          dispatch({ type: 'UPDATE_USER_SOP', payload: updatedSop });
+      } else {
+          dispatch({ type: 'UPDATE_SOP', payload: updatedSop });
+      }
+      dispatch({ type: 'SET_EDITING_SOP_ID', payload: null });
+    } else {
+       if (isTemplate) {
+        const newTemplate = { ...newSopData, id: String(Date.now()), category: 'USER_TEMPLATE' };
+        dispatch({ type: 'ADD_SOP_TEMPLATE', payload: newTemplate });
+      } else {
+        const newSop = { ...newSopData, id: String(Date.now()), category: 'M4_SOP_USER' };
+        dispatch({ type: 'ADD_SOP', payload: newSop });
+      }
+    }
+
+    handleCancel();
   };
 
   const handleClearForm = () => {
-    setTitle('');
-    setDescription('');
-    setSteps(['']);
-    setCues(['']);
-    setError(null);
+    setTitle(''); setDescription(''); setSteps(['']); setCues(['']);
+    setTaskTemplate([]); setIsPageView(false); setIsTemplate(false); setError(null);
+  };
+
+  const handleCancel = () => {
+    handleClearForm();
+    dispatch({ type: 'SET_EDITING_SOP_ID', payload: null });
+    dispatch({ type: 'SET_VIEW', payload: 'sop-vault' });
+  };
+  
+  const handleResetToDefault = () => {
+      if (editingSopId) dispatch({ type: 'RESET_SOP', payload: editingSopId });
   };
 
   return (
     <section className="mb-10 p-6 bg-card-dark rounded-lg shadow-md border border-gray-700">
        <header className="text-center mb-10">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-accent-teal mb-4">Create New Protocol</h1>
-        <p className="text-lg text-text-light text-opacity-80">
-          Define a new Standard Operating Procedure. Be precise. Be clear. This is the structure that will absorb chaos.
-        </p>
+        <h1 className="text-4xl md:text-5xl font-extrabold text-accent-teal mb-4">{isEditMode ? 'Edit Protocol' : 'Create New Protocol'}</h1>
+        <p className="text-lg text-text-light text-opacity-80">{isEditMode ? 'Refine the structure that absorbs chaos.' : 'Define a new Standard Operating Procedure. Be precise. Be clear.'}</p>
       </header>
       <form onSubmit={handleSubmit} className="space-y-6">
-        {error && (
-          <div role="alert" aria-live="assertive" className="bg-red-800 bg-opacity-30 border border-red-700 text-red-400 p-4 rounded-md mb-4">
-            <p className="font-semibold mb-2">Error: Non-Compliance Detected</p>
-            <p>{error}</p>
-          </div>
-        )}
+        {error && <div role="alert" aria-live="assertive" className="bg-red-800 bg-opacity-30 border border-red-700 text-red-400 p-4 rounded-md"><p className="font-semibold mb-2">Error: Non-Compliance Detected</p><p>{error}</p></div>}
+
+        <fieldset className="space-y-4">
+            <div>
+                <label htmlFor="sop-title" className="block text-sm font-medium mb-1">Protocol Title: <span className="text-red-500">*</span></label>
+                <input type="text" id="sop-title" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full p-2 bg-gray-800 border border-gray-600 rounded" placeholder="e.g., Solo Execution Mode Refinement" required />
+            </div>
+            <div>
+                <label htmlFor="sop-description" className="block text-sm font-medium mb-1">Description: <span className="text-red-500">*</span></label>
+                <textarea id="sop-description" value={description} onChange={(e) => setDescription(e.target.value)} rows={3} className="w-full p-2 bg-gray-800 border border-gray-600 rounded" placeholder="e.g., Adjustments to deep work blocks for optimized focus." required />
+            </div>
+        </fieldset>
 
         <div>
-          <label htmlFor="sop-title" className="block text-accent-teal text-lg font-medium mb-2">
-            Protocol Title: <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            id="sop-title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-text-light placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-blue"
-            placeholder="e.g., Solo Execution Mode Refinement"
-            aria-required="true"
-          />
+            <label className="block text-lg font-semibold mb-2 text-accent-teal">Execution Steps</label>
+            <div className="space-y-3 p-4 bg-gray-800/50 rounded-md border border-gray-700">
+                {steps.map((step, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                    <span className="text-text-light font-bold w-8">{index + 1}.</span>
+                    <input type="text" value={step} onChange={(e) => handleStepChange(index, e.target.value)} className="flex-grow p-2 bg-gray-800 border border-gray-600 rounded" placeholder="Action to be executed..." />
+                    {steps.length > 1 && <button type="button" onClick={() => handleRemoveStep(index)} className="p-2 bg-red-800/80 text-red-300 rounded" aria-label={`Remove step ${index + 1}`}>&times;</button>}
+                </div>
+                ))}
+                 <button type="button" onClick={handleAddStep} className="mt-2 px-3 py-1 bg-accent-blue/30 text-accent-blue rounded text-sm hover:bg-accent-blue/50">+ Add Step</button>
+            </div>
         </div>
 
-        <div>
-          <label htmlFor="sop-description" className="block text-accent-teal text-lg font-medium mb-2">
-            Description: <span className="text-red-500">*</span>
-          </label>
-          <textarea
-            id="sop-description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={3}
-            className="w-full p-3 bg-gray-800 border border-gray-700 rounded-md text-text-light placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-blue"
-            placeholder="e.g., Adjustments to deep work blocks for optimized focus. Mandatory."
-            aria-required="true"
-          ></textarea>
-        </div>
+        <details className="p-4 border border-gray-700 rounded-lg group">
+            <summary className="cursor-pointer font-semibold text-accent-teal text-lg">Task Template (for SOP Task Generator)</summary>
+            <div className="space-y-3 pt-4 mt-2 border-t border-gray-700">
+                {taskTemplate.map((task, index) => (
+                    <div key={index} className="flex items-center space-x-2 p-2 bg-gray-800 rounded">
+                        <input type="text" value={task.title} onChange={(e) => handleTaskTemplateChange(index, 'title', e.target.value)} className="flex-grow p-2 bg-gray-900 border border-gray-600 rounded" placeholder="Task title..." />
+                        <select value={task.priority} onChange={(e) => handleTaskTemplateChange(index, 'priority', e.target.value)} className="p-2 bg-gray-900 border border-gray-600 rounded">
+                            <option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option>
+                        </select>
+                        <button type="button" onClick={() => handleRemoveTaskFromTemplate(index)} className="p-2 bg-red-800/80 text-red-300 rounded" aria-label={`Remove task from template`}>&times;</button>
+                    </div>
+                ))}
+                 <button type="button" onClick={handleAddTaskToTemplate} className="mt-2 px-3 py-1 bg-accent-blue/30 text-accent-blue rounded text-sm hover:bg-accent-blue/50">+ Add Task to Template</button>
+            </div>
+        </details>
+        
+        <details className="p-4 border border-gray-700 rounded-lg group">
+            <summary className="cursor-pointer font-semibold text-accent-teal text-lg">Optional Details</summary>
+            <div className="space-y-4 pt-4 mt-2 border-t border-gray-700">
+                <div>
+                    <label className="block text-sm font-medium mb-1">Actionable Cues:</label>
+                    <div className="space-y-2">
+                        {cues.map((cue, index) => (
+                        <div key={index} className="flex items-center space-x-2">
+                            <input type="text" value={cue} onChange={(e) => handleCueChange(index, e.target.value)} className="flex-grow p-2 bg-gray-800 border border-gray-600 rounded" placeholder={`Cue ${index + 1}...`} />
+                            {cues.length > 1 && <button type="button" onClick={() => handleRemoveCue(index)} className="p-2 bg-red-800/80 text-red-300 rounded" aria-label={`Remove cue ${index + 1}`}>&times;</button>}
+                        </div>
+                        ))}
+                    </div>
+                    <button type="button" onClick={handleAddCue} className="mt-3 px-3 py-1 bg-accent-blue/30 text-accent-blue rounded text-sm hover:bg-accent-blue/50">+ Add Cue</button>
+                </div>
+                
+                {!isEditMode && <div className="flex items-center"><input type="checkbox" id="is-template" checked={isTemplate} onChange={(e) => setIsTemplate(e.target.checked)} className="h-4 w-4 rounded bg-gray-700 text-accent-blue focus:ring-accent-blue" /><label htmlFor="is-template" className="ml-2 text-sm">Save as a reusable Template</label></div>}
+                {!isEditingCoreSop && !isTemplate && <div className="flex items-center"><input type="checkbox" id="is-page-view" checked={isPageView} onChange={(e) => setIsPageView(e.target.checked)} className="h-4 w-4 rounded bg-gray-700 text-accent-blue focus:ring-accent-blue" /><label htmlFor="is-page-view" className="ml-2 text-sm">Make this a navigable page</label></div>}
+            </div>
+        </details>
 
-        <div>
-          <label className="block text-accent-teal text-lg font-medium mb-2">
-            Protocol Steps: <span className="text-red-500">*</span>
-          </label>
-          <div className="space-y-3">
-            {steps.map((step, index) => (
-              <div key={index} className="flex items-center space-x-2">
-                <span className="text-text-light font-bold flex-shrink-0 w-8">{index + 1}.</span>
-                <input
-                  type="text"
-                  value={step}
-                  onChange={(e) => handleStepChange(index, e.target.value)}
-                  className="flex-grow p-3 bg-gray-800 border border-gray-700 rounded-md text-text-light placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-blue"
-                  placeholder="Action to be executed (e.g., Water: Consume 500ml)."
-                  aria-label={`Protocol Step ${index + 1} content`}
-                  aria-required={index === 0 ? "true" : "false"}
-                />
-                {steps.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveStep(index)}
-                    className="p-2 bg-red-700 bg-opacity-40 text-red-300 rounded-md hover:bg-red-600 transition-colors duration-200"
-                    aria-label={`Remove protocol step ${index + 1}`}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm1 3a1 1 0 100 2h4a1 1 0 100-2H8z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-          <button
-            type="button"
-            onClick={handleAddStep}
-            className="mt-4 px-4 py-2 bg-accent-blue bg-opacity-30 text-accent-blue rounded-md hover:bg-opacity-50 transition-colors duration-200 flex items-center"
-            aria-label="Add another protocol step"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
-            </svg>
-            Add Step
-          </button>
-        </div>
-
-        <div>
-          <label className="block text-accent-teal text-lg font-medium mb-2">
-            Actionable Cues: (Optional)
-          </label>
-          <div className="space-y-3">
-            {cues.map((cue, index) => (
-              <div key={index} className="flex items-center space-x-2">
-                <input
-                  type="text"
-                  value={cue}
-                  onChange={(e) => handleCueChange(index, e.target.value)}
-                  className="flex-grow p-3 bg-gray-800 border border-gray-700 rounded-md text-text-light placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-blue"
-                  placeholder={`Cue ${index + 1}: Quick reminder.`}
-                  aria-label={`Actionable Cue ${index + 1} content`}
-                />
-                {cues.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveCue(index)}
-                    className="p-2 bg-red-700 bg-opacity-40 text-red-300 rounded-md hover:bg-red-600 transition-colors duration-200"
-                    aria-label={`Remove actionable cue ${index + 1}`}
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm1 3a1 1 0 100 2h4a1 1 0 100-2H8z" clipRule="evenodd" />
-                    </svg>
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-          <button
-            type="button"
-            onClick={handleAddCue}
-            className="mt-4 px-4 py-2 bg-accent-blue bg-opacity-30 text-accent-blue rounded-md hover:bg-opacity-50 transition-colors duration-200 flex items-center"
-            aria-label="Add another actionable cue"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clipRule="evenodd" />
-            </svg>
-            Add Cue
-          </button>
-        </div>
-
-        <div className="flex justify-end space-x-4">
-          <button
-            type="button"
-            onClick={handleClearForm}
-            className="px-6 py-3 bg-gray-700 text-text-light rounded-md hover:bg-gray-600 transition-colors duration-200 font-semibold"
-            aria-label="Clear all form fields"
-          >
-            Clear Form
-          </button>
-          <button
-            type="submit"
-            className="px-6 py-3 bg-accent-green text-background-dark rounded-md hover:bg-green-600 transition-colors duration-200 font-semibold focus:outline-none focus:ring-2 focus:ring-accent-green"
-            aria-label="Submit new protocol"
-          >
-            Add Protocol
-          </button>
+        <div className="flex justify-between items-center pt-4 border-t border-gray-700">
+            <div>
+                {isEditMode && isCoreSopModified && <button type="button" onClick={handleResetToDefault} className="px-4 py-2 bg-yellow-800/50 text-yellow-300 rounded hover:bg-yellow-800/80 font-semibold text-sm">Reset to Default</button>}
+            </div>
+            <div className="flex justify-end space-x-4">
+              <button type="button" onClick={handleCancel} className="px-6 py-3 bg-gray-700 rounded hover:bg-gray-600 font-semibold">{isEditMode ? 'Cancel' : 'Clear Form'}</button>
+              <button type="submit" className="px-6 py-3 bg-accent-green text-background-dark rounded hover:bg-green-600 font-semibold">{isEditMode ? 'Save Changes' : 'Add Protocol'}</button>
+            </div>
         </div>
       </form>
     </section>

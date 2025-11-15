@@ -1,122 +1,141 @@
 import React, { useState } from 'react';
-import LifeMaintenanceProtocol from './components/LifeMaintenanceProtocol.tsx';
-import MorningTransitionProtocol from './components/MorningTransitionProtocol.tsx';
-import PersonalHygieneProtocol from './components/PersonalHygieneProtocol.tsx';
-import SoloExecutionModeProtocol from './components/SoloExecutionModeProtocol.tsx';
-import CommandCenterSetupSop from './components/CommandCenterSetupSop.tsx';
-import PixelFoldSetupSop from './components/PixelFoldSetupSop.tsx';
-import AccessibilitySafetyProtocol from './components/AccessibilitySafetyProtocol.tsx';
-import BubbleShieldProtocol from './components/BubbleShieldProtocol.tsx';
-import Manifesto from './components/Manifesto.tsx';
-import HeadphoneControllerIpi from './components/HeadphoneControllerIpi.tsx';
-import { useCurrentMode } from './hooks/useCurrentMode.tsx';
-import { AppStateProvider, useAppState } from './contexts/AppStateContext.tsx';
-import Header from './components/Header.tsx';
-import SopForm from './components/SopForm.tsx';
-import SystemIntegrationGuide from './components/SystemIntegrationGuide.tsx';
-import AllChecklists from './components/AllChecklists.tsx';
-import CoParentingDashboard from './components/CoParentingDashboard.tsx'; // Renamed and refactored
-import CoParentingDashboardBuilder from './components/CoParentingDashboardBuilder.tsx'; // New import for Co-Parenting dashboard builder
-import SystemResetModal from './components/SystemResetModal.tsx';
-import ScrollToTopButton from './components/ScrollToTopButton.tsx';
-import DashboardLauncher from './components/DashboardLauncher.tsx';
-import WilliamsDashboard from './components/WilliamsDashboard.tsx'; // New import for William's main dashboard
-import WilliamDashboardBuilder from './components/WilliamDashboardBuilder.tsx'; // New import for William's dashboard builder
-import WillowsDashboard from './components/WillowsDashboard.tsx'; // New import for Willow's main dashboard (renamed)
-import WillowsDashboardBuilder from './components/WillowsDashboardBuilder.tsx'; // New import for Willow's dashboard builder
-import SopVault from './components/SopVault.tsx';
-import WeeklyReview from './components/WeeklyReview.tsx';
-import FoundationalProtocols from './components/FoundationalProtocols.tsx';
-import FamilyStructureModeProtocol from './components/FamilyStructureModeProtocol.tsx';
-import ClassicWillyProtocol from './components/ClassicWillyProtocol.tsx';
-import ContextSwitchingProtocol from './components/ContextSwitchingProtocol.tsx';
-import ExecutiveDysfunctionProtocol from './components/ExecutiveDysfunctionProtocol.tsx';
-import SensoryOverloadProtocol from './components/SensoryOverloadProtocol.tsx';
-import SebastiansDashboard from './components/SebastiansDashboard.tsx'; // New import for Sebastian's main dashboard (renamed)
-import SebastiansDashboardBuilder from './components/SebastiansDashboardBuilder.tsx'; // New import for Sebastian's dashboard builder
-import WonkyAISetupGuide from './components/WonkyAISetupGuide.tsx'; // New import for the initial setup guide
+import { AppStateProvider, useAppState } from './contexts/AppStateContext.js';
+import Header from './components/Header.js';
+import SystemResetModal from './components/SystemResetModal.js';
+import ScrollToTopButton from './components/ScrollToTopButton.js';
+import AuthScreen from './components/AuthScreen.js';
+import WonkyAISetupGuide from './components/WonkyAISetupGuide.js'; 
+import LiveChatModal from './components/LiveChatModal.js';
+import CommandPalette from './components/CommandPalette.js';
+import { useCommandPalette } from './hooks/useCommandPalette.js';
+import ContextSwitchCaptureModal from './components/ContextSwitchCaptureModal.js';
+import ContextSwitchRestoreModal from './components/ContextSwitchRestoreModal.js';
+import { useAchievementEngine } from './hooks/useAchievementEngine.js';
+import ToastContainer from './components/ToastContainer.js';
+import LoadingSpinner from './components/LoadingSpinner.js';
+import ErrorBoundary from './components/ErrorBoundary.js';
 
 
-const AppContent: React.FC = () => {
-  const { appState, dispatch } = useAppState();
-  const currentMode = useCurrentMode(); // Keep for child components that might need it
+// Import all view components
+import WilliamsDashboard from './components/WilliamsDashboard.js';
+import WillowsDashboard from './components/WillowsDashboard.js';
+import SebastiansDashboard from './components/SebastiansDashboard.js';
+import CoParentingDashboard from './components/CoParentingDashboard.js';
+import SopVault from './components/SopVault.js';
+import WeeklyReview from './components/WeeklyReview.js';
+import ArchiveLog from './components/ArchiveLog.js';
+import StrategicRoadmap from './components/StrategicRoadmap.js';
+import DailyDebrief from './components/DailyDebrief.js';
+import Manifesto from './components/Manifesto.js';
+import UserSopView from './components/UserSopView.js';
+import SopForm from './components/SopForm.js';
+import AllChecklists from './components/AllChecklists.js';
+import CoParentingDashboardBuilder from './components/CoParentingDashboardBuilder.js';
+import WilliamDashboardBuilder from './components/WilliamDashboardBuilder.js';
+import WillowsDashboardBuilder from './components/WillowsDashboardBuilder.js';
+import SebastiansDashboardBuilder from './components/SebastiansDashboardBuilder.js';
+import SystemInsights from './components/SystemInsights.js';
+import GameMasterDashboard from './components/GameMasterDashboard.js';
+import GardenView from './components/GardenView.js';
+import CommandCenter from './components/CommandCenter.js';
+import DailyReport from './components/DailyReport.js';
+import { componentMap } from './components/componentMap.js';
+import ModuleViewWrapper from './components/ModuleViewWrapper.js';
+import { ALL_WILLIAM_MODULES_CONFIG } from './constants.js';
+import { SOP_DATA } from './constants.js';
+import ProtocolView from './components/ProtocolView.js';
+import GenericChecklistModule from './components/GenericChecklistModule.js';
+import TechnicalManual from './components/TechnicalManual.js';
+import DesignLanguageProtocol from './components/DesignLanguageProtocol.js';
+import OperatingManual from './components/OperatingManual.js';
+import DeploymentProtocol from './components/DeploymentProtocol.js';
+
+
+const AppContent = () => {
+  const { appState } = useAppState();
   const [isResetModalOpen, setResetModalOpen] = useState(false);
+  const [isLiveChatOpen, setLiveChatOpen] = useState(false);
+  
+  // Command Palette Hook
+  const { commandPaletteProps } = useCommandPalette();
+  
+  // Achievement Engine Hook
+  useAchievementEngine();
 
-  // Content for each view type
+  // If initial setup is not complete, show the guide.
+  if (!appState.initialSetupComplete) {
+    return <WonkyAISetupGuide />;
+  }
+
   const renderView = () => {
-    // If setup is not complete, ONLY render the setup guide.
-    // This is the top-level control for mandatory onboarding.
-    if (!appState.initialSetupComplete) {
-      return <WonkyAISetupGuide />;
-    }
+    const { view } = appState;
+    
+    const viewMap = {
+        'garden-view': <GardenView />,
+        'operations-control': <WilliamsDashboard />,
+        'willows-dashboard': <WillowsDashboard />,
+        'sebastians-dashboard': <SebastiansDashboard />,
+        'co-parenting-dashboard': <CoParentingDashboard />,
+        'game-master-dashboard': <GameMasterDashboard />,
+        'sop-vault': <SopVault />,
+        'weekly-review': <WeeklyReview />,
+        'archive-log': <ArchiveLog />,
+        'strategic-roadmap': <StrategicRoadmap />,
+        'daily-debrief': <DailyDebrief />,
+        'command-center': <CommandCenter />,
+        'daily-report': <DailyReport />,
+        'all-checklists': <AllChecklists />,
+        'system-insights': <SystemInsights />,
+        'create-sop': <SopForm />,
+        'william-dashboard-builder': <WilliamDashboardBuilder />,
+        'willow-dashboard-builder': <WillowsDashboardBuilder />,
+        'sebastian-dashboard-builder': <SebastiansDashboardBuilder />,
+        'co-parenting-dashboard-builder': <CoParentingDashboardBuilder />,
+        'user-sop-view': <UserSopView />,
+        'manifesto': <Manifesto />,
+        'technical-manual': <TechnicalManual />,
+        'design-language-protocol': <DesignLanguageProtocol />,
+        'operating-manual': <OperatingManual />,
+        'deployment-protocol': <DeploymentProtocol />,
+    };
 
-    // Once setup is complete, render based on the current view state.
-    switch (appState.view) {
-      case 'dashboard-launcher':
-        return <DashboardLauncher />;
-      case 'williams-dashboard':
-        return <WilliamsDashboard />;
-      case 'william-dashboard-builder':
-        return <WilliamDashboardBuilder />;
-      case 'willows-dashboard':
-        return <WillowsDashboard />;
-      case 'willow-dashboard-builder':
-        return <WillowsDashboardBuilder />;
-      case 'sebastians-dashboard':
-        return <SebastiansDashboard />;
-      case 'sebastian-dashboard-builder':
-        return <SebastiansDashboardBuilder />;
-      case 'co-parenting-dashboard':
-        return <CoParentingDashboard />;
-      case 'co-parenting-dashboard-builder':
-        return <CoParentingDashboardBuilder />;
-      case 'sop-vault':
-        return <SopVault />;
-      case 'weekly-review':
-        return <WeeklyReview />;
-      case 'manifesto':
-        return <Manifesto />;
-      case 'foundational-protocols':
-        return <FoundationalProtocols />;
-      case 'family-structure-mode':
-        return <FamilyStructureModeProtocol />;
-      case 'solo-execution-mode':
-        return <SoloExecutionModeProtocol />;
-      case 'classic-willy-protocol':
-        return <ClassicWillyProtocol />;
-      case 'context-switching':
-        return <ContextSwitchingProtocol />;
-      case 'executive-dysfunction':
-        return <ExecutiveDysfunctionProtocol />;
-      case 'sensory-overload':
-        return <SensoryOverloadProtocol />;
-      case 'life-maintenance-protocol':
-        return <LifeMaintenanceProtocol />;
-      case 'morning-transition-protocol':
-        return <MorningTransitionProtocol />;
-      case 'personal-hygiene-protocol':
-        return <PersonalHygieneProtocol />;
-      case 'bubble-shield-protocol':
-        return <BubbleShieldProtocol />;
-      case 'command-center-setup':
-        return <CommandCenterSetupSop />;
-      case 'pixel-fold-setup':
-        return <PixelFoldSetupSop />;
-      case 'accessibility-safety':
-        return <AccessibilitySafetyProtocol />;
-      case 'create-sop':
-        return <SopForm />;
-      case 'system-integration':
-        return <SystemIntegrationGuide />;
-      case 'all-checklists':
-        return <AllChecklists />;
-      case 'headphone-controller-ipi':
-        return <HeadphoneControllerIpi />;
-      default:
-        // Default to the DashboardLauncher if an unhandled view is somehow active
-        // This acts as a safe fallback once initial setup is complete
-        return <DashboardLauncher />;
-    }
+    // Dynamically add all SOP/Protocol views
+    SOP_DATA.forEach(sop => {
+        // Find the component that already renders this protocol
+        const ProtocolComponent = (props) => <ProtocolView sourceDocument={sop.title} {...props} />;
+        viewMap[sop.viewId] = <ProtocolComponent />;
+    });
+
+    // Add module views dynamically
+    ALL_WILLIAM_MODULES_CONFIG.forEach(module => {
+        const isChecklistModule = module.id.startsWith('checklist-module-');
+        
+        let ModuleComponent;
+        let props = {};
+
+        if (isChecklistModule) {
+            ModuleComponent = GenericChecklistModule;
+            // Extract source document from module name "Checklist: Life Maintenance Protocol" -> "Life Maintenance Protocol"
+            const sourceDocument = module.name.replace('Checklist: ', '');
+            props = { sourceDocument };
+        } else {
+            ModuleComponent = componentMap[module.id];
+        }
+
+        if (ModuleComponent) {
+            viewMap[`view-${module.id}`] = (
+                <ModuleViewWrapper title={module.name}>
+                    <ModuleComponent {...props} />
+                </ModuleViewWrapper>
+            );
+        }
+    });
+
+    const component = viewMap[view];
+    if (component) return component;
+    
+    // Default Fallback to Garden View
+    return <GardenView />;
   };
 
   return (
@@ -127,13 +146,53 @@ const AppContent: React.FC = () => {
       </main>
       <SystemResetModal isOpen={isResetModalOpen} onClose={() => setResetModalOpen(false)} />
       <ScrollToTopButton />
+      {isLiveChatOpen && <LiveChatModal onClose={() => setLiveChatOpen(false)} />}
+      <CommandPalette {...commandPaletteProps} />
+      {appState.isContextCaptureModalOpen && <ContextSwitchCaptureModal />}
+      {appState.isContextRestoreModalOpen && <ContextSwitchRestoreModal />}
+      <ToastContainer />
+      {appState.dashboardType === 'william' && (
+          <button
+            onClick={() => setLiveChatOpen(true)}
+            className="fixed bottom-6 right-20 z-30 no-print bg-accent-green text-background-dark p-4 rounded-full shadow-lg hover:bg-green-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background-dark focus:ring-accent-green transition-transform hover:scale-110"
+            aria-label="Open Live Chat AI"
+          >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M10 2a6 6 0 00-6 6v3.586l-1.293 1.293a1 1 0 001.414 1.414L6 12.414V13a6 6 0 006 6 6 6 0 006-6v-1.586l2.293-2.293a1 1 0 00-1.414-1.414L14 11.414V8a6 6 0 00-4-5.658V2a1 1 0 10-2 0v.342A5.963 5.963 0 0010 2z" />
+              </svg>
+          </button>
+      )}
     </div>
   );
 };
 
-const App: React.FC = () => (
+const Root = () => {
+  const { authUser, appState } = useAppState();
+
+  // Auth state is loading
+  if (authUser === undefined) {
+    return <LoadingSpinner message="Authenticating..." />;
+  }
+
+  // User is logged in, but their state hasn't loaded from DB yet
+  if (authUser && !appState) {
+    return <LoadingSpinner message="Loading Sprout OS..." />;
+  }
+  
+  // User is logged in and state is loaded
+  if (authUser && appState) {
+    return <AppContent />;
+  }
+
+  // No user, show login
+  return <AuthScreen />;
+};
+
+const App = () => (
   <AppStateProvider>
-    <AppContent />
+    <ErrorBoundary>
+      <Root />
+    </ErrorBoundary>
   </AppStateProvider>
 );
 

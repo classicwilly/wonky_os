@@ -1,14 +1,11 @@
-import React from 'react';
-import { useAppState } from '../../contexts/AppStateContext.tsx'; // Adjusted path
-import { Mood, Energy } from '../../types.tsx'; // Adjusted path
-import ContentCard from '../ContentCard.tsx'; // Adjusted path
 
-const StatusButton: React.FC<{
-    label: string;
-    isActive: boolean;
-    onClick: () => void;
-    activeClass?: string;
-}> = ({ label, isActive, onClick, activeClass = 'bg-accent-blue text-white' }) => {
+
+import React from 'react';
+import { useAppState } from '../../contexts/AppStateContext.js'; // Adjusted path
+
+import ContentCard from '../ContentCard.js'; // Adjusted path
+
+const StatusButton = ({ label, isActive, onClick, activeClass = 'bg-accent-blue text-white' }) => {
     const baseClass = 'px-3 py-1 rounded-md text-sm font-semibold transition-colors w-full break-words';
     const inactiveClass = 'bg-gray-700 hover:bg-gray-600';
     return (
@@ -18,11 +15,11 @@ const StatusButton: React.FC<{
     );
 };
 
-const StatusTrackerModule: React.FC = () => {
+const StatusTrackerModule = () => {
     const { appState, dispatch } = useAppState();
 
-    const setMood = (mood: Mood) => dispatch({ type: 'SET_MOOD', payload: mood });
-    const setEnergy = (energy: Energy) => dispatch({ type: 'SET_ENERGY', payload: energy });
+    const setMood = (mood) => dispatch({ type: 'SET_MOOD', payload: mood });
+    const setEnergy = (energy) => dispatch({ type: 'SET_ENERGY', payload: energy });
 
     return (
         <ContentCard title="👤 Personal Status">

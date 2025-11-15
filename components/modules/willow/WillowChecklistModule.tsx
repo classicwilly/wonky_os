@@ -1,9 +1,10 @@
-import React from 'react';
-import ChecklistItem from '../../ChecklistItem.tsx';
-import ContentCard from '../../ContentCard.tsx';
-import { ALL_CHECKLIST_DATA } from '../../../checklist-data.tsx';
 
-const WillowChecklistModule: React.FC = () => {
+import React from 'react';
+import ChecklistItem from '../../ChecklistItem.js';
+import ContentCard from '../../ContentCard.js';
+import { ALL_CHECKLIST_DATA } from '../../../checklist-data.js';
+
+const WillowChecklistModule = () => {
   const protocolData = ALL_CHECKLIST_DATA.filter(s => s.sourceDocument === "Willow's Corner");
 
   return (
@@ -17,8 +18,18 @@ const WillowChecklistModule: React.FC = () => {
                 <div key={subSection.id}>
                   <h4 className="text-lg font-semibold text-accent-teal mb-1">{subSection.title}</h4>
                   <ul className="list-none space-y-2">
+                    {/* FIX: Explicitly pass props to ChecklistItem instead of spreading to avoid type errors. */}
                     {subSection.items?.map(item => (
-                      <ChecklistItem key={item.id} {...item}>{item.label}</ChecklistItem>
+                      <ChecklistItem
+                        key={item.id}
+                        id={item.id}
+                        gemAwardId={item.gemAwardId}
+                        gemRecipient={item.gemRecipient}
+                        achievementAwardId={item.achievementAwardId}
+                        large={item.large}
+                      >
+                        {item.label}
+                      </ChecklistItem>
                     ))}
                   </ul>
                 </div>

@@ -1,22 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { useAppState } from '../contexts/AppStateContext.tsx';
-import { ALL_WILLOW_MODULES_CONFIG } from '../constants.tsx';
-import { WillowModuleKey } from '../types.tsx';
-import ContentCard from './ContentCard.tsx';
 
-const WillowsDashboardBuilder: React.FC = () => {
+import React, { useState, useEffect } from 'react';
+import { useAppState } from '../contexts/AppStateContext.js';
+import { ALL_WILLOW_MODULES_CONFIG } from '../constants.js';
+
+// FIX: Explicitly typed component with React.FC and a props interface to handle the `key` prop correctly.
+interface TabButtonProps {
+    label: string;
+    isActive: boolean;
+    onClick: () => void;
+}
+const TabButton: React.FC<TabButtonProps> = ({ label, isActive, onClick }) => (
+    <button
+        onClick={onClick}
+        className={`whitespace-nowrap py-3 px-4 border-b-2 font-medium text-sm transition-colors
+            ${isActive
+                ? 'border-accent-blue text-accent-blue'
+                : 'border-transparent text-gray-400 hover:text-gray-200 hover:border-gray-500'
+            }`}
+    >
+        {label}
+    </button>
+);
+
+const WillowsDashboardBuilder = () => {
   const { appState, dispatch } = useAppState();
   const { willowDashboardModules } = appState;
 
-  // Local state for changes before saving
-  const [tempEnabledModules, setTempEnabledModules] = useState<WillowModuleKey[]>(willowDashboardModules);
-
-  // Sync temp state with global state if global state changes (e.g., reset)
+  const [tempEnabledModules, setTempEnabledModules] = useState(willowDashboardModules);
+  const [activeTab, setActiveTab] = useState('core');
+  
   useEffect(() => {
     setTempEnabledModules(willowDashboardModules);
   }, [willowDashboardModules]);
 
-  const handleToggleModule = (moduleId: WillowModuleKey, enable: boolean) => {
+  const handleToggleModule = (moduleId, enable) => {
     setTempEnabledModules(prev => {
       if (enable && !prev.includes(moduleId)) {
         return [...prev, moduleId];
@@ -30,76 +47,71 @@ const WillowsDashboardBuilder: React.FC = () => {
 
   const handleSave = () => {
     dispatch({ type: 'SET_WILLOW_DASHBOARD_MODULES', payload: tempEnabledModules });
-    dispatch({ type: 'SET_VIEW', payload: 'willows-dashboard' }); // Navigate back to Willow's dashboard
+    dispatch({ type: 'SET_VIEW', payload: 'willows-dashboard' });
   };
 
   const handleCancel = () => {
-    // Revert to the current saved state and navigate back
-    setTempEnabledModules(willowDashboardModules); // Revert local changes
-    dispatch({ type: 'SET_VIEW', payload: 'willows-dashboard' }); // Navigate back to Willow's dashboard
+    setTempEnabledModules(willowDashboardModules);
+    dispatch({ type: 'SET_VIEW', payload: 'willows-dashboard' });
   };
+  
+  const moduleCategories = {
+    core: 'Core',
+    quests: 'Quests',
+    checklists: 'Checklists',
+    rewards: 'Rewards',
+    communication: 'Communication',
+  };
+
+  const modulesForTab = ALL_WILLOW_MODULES_CONFIG.filter(m => m.category === activeTab);
 
   return (
     <div className="max-w-4xl mx-auto py-8">
       <header className="text-center mb-10">
         <h1 className="text-4xl md:text-5xl font-extrabold text-accent-teal mb-4">Customize Willow's Dashboard</h1>
         <p className="text-lg text-text-light text-opacity-80">
-          Select the modules you want active on Willow's dashboard. Toggle them on/off as needed.
+          Select the modules you want active on Willow's dashboard. Core modules cannot be disabled.
         </p>
       </header>
 
-      <div className="space-y-6">
-        <ContentCard title="Checklist Modules" titleClassName="text-accent-green text-2xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {ALL_WILLOW_MODULES_CONFIG.filter(m => m.category === 'checklists').map(module => (
-              <div key={module.id} className="flex items-center justify-between p-3 bg-gray-800 rounded-md border border-gray-700">
-                <div>
-                  <h3 className="font-semibold text-accent-blue">{module.name}</h3>
-                  <p className="text-sm text-text-light text-opacity-70">{module.description}</p>
-                </div>
-                <label className="relative inline-flex items-center cursor-pointer ml-4">
-                  <input
-                    type="checkbox"
-                    value=""
-                    className="sr-only peer"
-                    checked={tempEnabledModules.includes(module.id)}
-                    onChange={(e) => handleToggleModule(module.id, e.target.checked)}
-                  />
-                  <div className={`w-11 h-6 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-accent-blue/50 ${
-                    tempEnabledModules.includes(module.id) ? 'bg-accent-blue' : 'bg-gray-600'
-                  } peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
-                </label>
+      <div className="bg-card-dark rounded-lg border border-gray-700">
+        <div className="border-b border-gray-700">
+            <nav className="-mb-px flex space-x-2 px-4 overflow-x-auto" aria-label="Tabs">
+                {Object.entries(moduleCategories).map(([key, label]) => (
+                    <TabButton key={key} label={label} isActive={activeTab === key} onClick={() => setActiveTab(key)} />
+                ))}
+            </nav>
+        </div>
+        <div className="p-4">
+             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {modulesForTab.map(module => (
+                  <div key={module.id} className={`flex items-center justify-between p-3 bg-gray-800 rounded-md border border-gray-700 ${!module.isRemovable ? 'opacity-70' : ''}`}>
+                    <div>
+                      <h3 className="font-semibold text-accent-blue">
+                        {module.name} {!module.isRemovable && <span className="text-xs text-gray-400">(Core)</span>}
+                      </h3>
+                      <p className="text-sm text-text-light text-opacity-70">{module.description}</p>
+                    </div>
+                    <label className={`relative inline-flex items-center ml-4 ${!module.isRemovable ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+                      <input
+                        type="checkbox"
+                        value=""
+                        className="sr-only peer"
+                        checked={tempEnabledModules.includes(module.id)}
+                        onChange={(e) => handleToggleModule(module.id, e.target.checked)}
+                        disabled={!module.isRemovable}
+                      />
+                      <div className={`w-11 h-6 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-accent-blue/50 ${
+                        tempEnabledModules.includes(module.id) ? 'bg-accent-blue' : 'bg-gray-600'
+                      } peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
+                    </label>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </ContentCard>
+        </div>
+      </div>
 
-        <ContentCard title="Reward Modules" titleClassName="text-accent-green text-2xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {ALL_WILLOW_MODULES_CONFIG.filter(m => m.category === 'rewards').map(module => (
-              <div key={module.id} className="flex items-center justify-between p-3 bg-gray-800 rounded-md border border-gray-700">
-                <div>
-                  <h3 className="font-semibold text-accent-blue">{module.name}</h3>
-                  <p className="text-sm text-text-light text-opacity-70">{module.description}</p>
-                </div>
-                <label className="relative inline-flex items-center cursor-pointer ml-4">
-                  <input
-                    type="checkbox"
-                    value=""
-                    className="sr-only peer"
-                    checked={tempEnabledModules.includes(module.id)}
-                    onChange={(e) => handleToggleModule(module.id, e.target.checked)}
-                  />
-                  <div className={`w-11 h-6 rounded-full peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-accent-blue/50 ${
-                    tempEnabledModules.includes(module.id) ? 'bg-accent-blue' : 'bg-gray-600'
-                  } peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:border-gray-300 after:rounded-full after:h-5 after:w-5 after:transition-all`}></div>
-                </label>
-              </div>
-            ))}
-          </div>
-        </ContentCard>
-
-        <div className="flex justify-end space-x-4 mt-8">
+      <div className="flex justify-end space-x-4 mt-8">
           <button
             onClick={handleCancel}
             className="px-6 py-3 bg-gray-700 text-text-light rounded-md hover:bg-gray-600 transition-colors duration-200 font-semibold"
@@ -112,7 +124,6 @@ const WillowsDashboardBuilder: React.FC = () => {
           >
             Save Changes
           </button>
-        </div>
       </div>
     </div>
   );

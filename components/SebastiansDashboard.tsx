@@ -1,10 +1,10 @@
-import React from 'react';
-import { useAppState } from '../contexts/AppStateContext.tsx';
-import { ALL_SEBASTIAN_MODULES_CONFIG } from '../constants.tsx';
-import ContentCard from './ContentCard.tsx'; // Assuming ContentCard is a general utility
-import { ViewType } from '../types.tsx';
 
-const SebastiansDashboard: React.FC = () => {
+
+import React from 'react';
+import { useAppState } from '../contexts/AppStateContext.js';
+import { componentMap } from './componentMap.js';
+
+const SebastiansDashboard = () => {
   const { appState, dispatch } = useAppState();
   const { sebastianDashboardModules, isModMode } = appState;
 
@@ -12,13 +12,8 @@ const SebastiansDashboard: React.FC = () => {
     dispatch({ type: 'SET_VIEW', payload: 'sebastian-dashboard-builder' });
   };
 
-  const enabledModules = sebastianDashboardModules
-    .map(moduleId => ALL_SEBASTIAN_MODULES_CONFIG.find(m => m.id === moduleId))
-    .filter(Boolean); // Filter out any undefined modules if IDs don't match config
-
-  const getGridColsClass = (count: number) => {
+  const getGridColsClass = (count) => {
     if (count <= 1) return 'grid-cols-1';
-    // Sebastian might have fewer modules, so a simple grid for now
     return 'grid-cols-1 md:grid-cols-2'; 
   };
 
@@ -40,19 +35,18 @@ const SebastiansDashboard: React.FC = () => {
         )}
       </header>
 
-      <div className={`grid gap-6 ${getGridColsClass(enabledModules.length)}`}>
-        {enabledModules.map(moduleConfig => {
-          if (!moduleConfig) return null;
-          const ModuleComponent = moduleConfig.component;
+      <div className={`grid gap-6 ${getGridColsClass(sebastianDashboardModules.length)}`}>
+        {sebastianDashboardModules.map(moduleId => {
+          const ModuleComponent = componentMap[moduleId];
+          if (!ModuleComponent) return null;
           return (
             <ModuleComponent 
-              key={moduleConfig.id} 
-              // Pass props like collectedGems specific to Sebastian if needed
-              collectedGems={appState.collectedGems.sebastian}
+              key={moduleId} 
             />
           );
         })}
       </div>
+      
     </div>
   );
 };

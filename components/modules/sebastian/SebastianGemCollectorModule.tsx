@@ -1,8 +1,9 @@
-import React from 'react';
-import GemCollector from '../../GemCollector.tsx';
-import { useAppState } from '../../../contexts/AppStateContext.tsx';
 
-const SebastianGemCollectorModule: React.FC = () => {
+import React from 'react';
+import GemCollector from '../../GemCollector.js';
+import { useAppState } from '../../../contexts/AppStateContext.js';
+
+const SebastianGemCollectorModule = () => {
     const { appState } = useAppState();
     const { collectedGems } = appState;
 

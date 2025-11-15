@@ -1,23 +1,7 @@
-export interface ChecklistItemData {
-  id: string;
-  label: string;
-  gemAwardId?: string;
-  gemRecipient?: 'willow' | 'sebastian';
-  achievementAwardId?: string;
-  large?: boolean;
-}
 
-export interface ChecklistSectionData {
-  id: string;
-  title: string;
-  sourceDocument: string;
-  items?: ChecklistItemData[];
-  subSections?: ChecklistSectionData[];
-  description?: string;
-  validation?: string; // For hygiene protocol
-}
 
-export const ALL_CHECKLIST_DATA: ChecklistSectionData[] = [
+// FIX: Explicitly typed ALL_CHECKLIST_DATA to ensure type safety and resolve inference issues.
+export const ALL_CHECKLIST_DATA = [
   // EssentialsTracker (from CommandCenter)
   {
     id: 'essentials-tracker',
@@ -55,87 +39,6 @@ export const ALL_CHECKLIST_DATA: ChecklistSectionData[] = [
                 { id: 'essentials-food-3', label: 'Dinner' },
             ]
         },
-    ]
-  },
-  // WeeklyReview.tsx
-  {
-    id: 'wr-setup',
-    title: 'PRE-PROTOCOL SETUP (5 Minutes)',
-    sourceDocument: 'Weekly Review',
-    items: [
-      { id: 'wr-setup-1', label: 'Clear physical space at Command Center' },
-      { id: 'wr-setup-2', label: 'Close all browser tabs and applications' },
-      { id: 'wr-setup-3', label: 'Open only: Google Keep, Google Tasks, NotebookLM, Calendar, this checklist' },
-      { id: 'wr-setup-4', label: 'Deploy Bubble Shield Profile 1.0' },
-      { id: 'wr-setup-5', label: 'Set phone to Do Not Disturb' },
-      { id: 'wr-setup-6', label: 'Set timer for 60 minutes' },
-    ],
-  },
-  {
-    id: 'wr-chaos-processing-parent',
-    title: 'PHASE 1: CHAOS PROCESSING (15 Minutes)',
-    sourceDocument: 'Weekly Review',
-    subSections: [
-        {
-            id: 'wr-chaos-processing-google-keep',
-            title: 'Google Keep Chaos Audit (10 minutes)',
-            sourceDocument: 'Weekly Review',
-            items: [
-              { id: 'wr-p1-s1-i1', label: 'Open Google Keep and review all notes from this week' },
-              { id: 'wr-p1-s1-i2', label: 'Process actionable tasks → Move to Google Tasks' },
-              { id: 'wr-p1-s1-i3', label: 'Process project ideas → Move to NotebookLM with tag "Ideas - [Module]"' },
-              { id: 'wr-p1-s1-i4', label: 'Process reference info → Move to NotebookLM with tag "Reference - [Topic]"' },
-              { id: 'wr-p1-s1-i5', label: 'Archive already-handled notes' },
-              { id: 'wr-p1-s1-i6', label: 'Delete no-longer-relevant notes' },
-              { id: 'wr-p1-s1-i7', label: 'Tag unclear items "Review Next Week"' },
-              { id: 'wr-p1-s1-i8', label: 'Goal: Google Keep is empty (or only has "Review Next Week" items)', achievementAwardId: 'inbox-zero' },
-            ]
-        },
-        {
-            id: 'wr-chaos-processing-voice',
-            title: 'Voice Recording Processing (5 minutes)',
-            sourceDocument: 'Weekly Review',
-            items: [
-              { id: 'wr-p1-s2-i1', label: 'Open Soundcore AI Recorder app' },
-              { id: 'wr-p1-s2-i2', label: 'Review untranscribed recordings' },
-              { id: 'wr-p1-s2-i3', label: 'Extract key information from each' },
-              { id: 'wr-p1-s2-i4', label: 'File in Google Keep / Tasks / NotebookLM' },
-              { id: 'wr-p1-s2-i5', label: 'Delete recordings after filing' },
-            ]
-        }
-    ]
-  },
-  {
-    id: 'wr-task-review-parent',
-    title: 'PHASE 2: TASK COMPLETION REVIEW (10 Minutes)',
-    sourceDocument: 'Weekly Review',
-    subSections: [
-        {
-            id: 'wr-task-review-completed',
-            title: 'Completed Task Audit (5 minutes)',
-            sourceDocument: 'Weekly Review',
-            items: [
-                { id: 'wr-p2-s1-i1', label: 'Open Google Tasks and review all "Completed" tasks' },
-                { id: 'wr-p2-s1-i2', label: 'Note which tasks took more/less time than expected' },
-                { id: 'wr-p2-s1-i3', label: 'Note what made tasks easy or hard' },
-                { id: 'wr-p2-s1-i4', label: 'Identify recurring tasks that should be scheduled' },
-                { id: 'wr-p2-s1-i5', label: 'Track productivity patterns (which days, which types)' },
-            ]
-        },
-        {
-            id: 'wr-task-review-incomplete',
-            title: 'Incomplete Task Triage (5 minutes)',
-            sourceDocument: 'Weekly Review',
-            items: [
-                { id: 'wr-p2-s2-i1', label: 'Review all "Not Completed" tasks' },
-                { id: 'wr-p2-s2-i2', label: 'For each: Is it still relevant? (Yes = keep, No = delete)' },
-                { id: 'wr-p2-s2-i3', label: "For each: Why didn't I complete it? (vague, too big, wrong priority, blocker)" },
-                { id: 'wr-p2-s2-i4', label: 'Rewrite vague tasks with clear micro-actions' },
-                { id: 'wr-p2-s2-i5', label: 'Break big tasks into smaller tasks' },
-                { id: 'wr-p2-s2-i6', label: 'Archive or delete non-relevant tasks' },
-                { id: 'wr-p2-s2-i7', label: 'Update deadlines for carryover tasks' },
-            ]
-        }
     ]
   },
   // Willow's Corner
@@ -335,7 +238,7 @@ export const ALL_CHECKLIST_DATA: ChecklistSectionData[] = [
     items: [
       { id: 'cs-p1-1', label: 'Step 1: STOP and Freeze (5 seconds)' },
       { id: 'cs-p1-2', label: 'Step 2: Active Task Capture (20 seconds)' },
-      { id: 'cs-p1-3', label: 'Step 3: Screen State Capture (10 seconds)' },
+      { id: 'cs-p1-3', label: 'Screen State Capture (10 seconds)' },
       { id: 'cs-p1-4', label: 'Step 4: Save All Work (10 seconds)' },
     ]
   },
@@ -541,9 +444,9 @@ export const ALL_CHECKLIST_DATA: ChecklistSectionData[] = [
     title: 'Friday Transition (4:00 PM - 6:00 PM)',
     sourceDocument: 'Family Structure Mode Protocol',
     items: [
-      { id: 'fsm-fri-1', label: '3:30 PM - 4:00 PM | Final Solo Prep:' },
-      { id: 'fsm-fri-2', label: '4:00 PM - 5:00 PM | Environment Preparation:' },
-      { id: 'fsm-fri-3', label: '5:00 PM - 6:00 PM | Arrival & Orientation:' },
+      { id: 'fsm-fri-1', label: 'Final Solo Prep', time: '3:30-4:00 PM', startHour: 15.5, endHour: 16 },
+      { id: 'fsm-fri-2', label: 'Environment Preparation', time: '4:00-5:00 PM', startHour: 16, endHour: 17 },
+      { id: 'fsm-fri-3', label: 'Arrival & Orientation', time: '5:00-6:00 PM', startHour: 17, endHour: 18 },
     ]
   },
   {
@@ -551,53 +454,56 @@ export const ALL_CHECKLIST_DATA: ChecklistSectionData[] = [
     title: 'Saturday Schedule (Full Day)',
     sourceDocument: 'Family Structure Mode Protocol',
     items: [
-      { id: 'fsm-sat-1', label: '6-7 AM:' },
-      { id: 'fsm-sat-2', label: '7-9 AM:' },
-      { id: 'fsm-sat-3', label: '9-10 AM:' },
-      { id: 'fsm-sat-4', label: '10 AM-12 PM:' },
-      { id: 'fsm-sat-5', label: '12-1 PM:' },
-      { id: 'fsm-sat-6', label: '1-3 PM:' },
-      { id: 'fsm-sat-7', label: '3-5 PM:' },
-      { id: 'fsm-sat-8', label: '5-7 PM:' },
-      { id: 'fsm-sat-9', label: '7-8:30 PM:' },
-      { id: 'fsm-sat-10', label: '8:30-9:30 PM:' },
-      { id: 'fsm-sat-11', label: '10-10:30 PM:' },
+      { id: 'fsm-sat-1', label: "Dad's Solo FDP & Prep", time: '6-7 AM', startHour: 6, endHour: 7 },
+      { id: 'fsm-sat-2', label: 'Kids Wake, FDP & Breakfast', time: '7-9 AM', startHour: 7, endHour: 9 },
+      { id: 'fsm-sat-3', label: 'Shared Chore Block', time: '9-10 AM', startHour: 9, endHour: 10 },
+      { id: 'fsm-sat-4', label: 'Structured Activity Block (e.g., Park, Museum)', time: '10 AM-12 PM', startHour: 10, endHour: 12 },
+      { id: 'fsm-sat-5', label: 'Lunch', time: '12-1 PM', startHour: 12, endHour: 13 },
+      { id: 'fsm-sat-6', label: 'Quiet Time Protocol (Mandatory)', time: '1-3 PM', startHour: 13, endHour: 15 },
+      { id: 'fsm-sat-7', label: 'Structured Interest Block (Legos, Art)', time: '3-5 PM', startHour: 15, endHour: 17 },
+      { id: 'fsm-sat-8', label: 'Dinner Prep & Dinner', time: '5-7 PM', startHour: 17, endHour: 19 },
+      { id: 'fsm-sat-9', label: 'Wind Down & Bedtime Routine', time: '7-8:30 PM', startHour: 19, endHour: 20.5 },
+      { id: 'fsm-sat-10', label: "Dad's Decompression", time: '8:30-9:30 PM', startHour: 20.5, endHour: 21.5 },
+      { id: 'fsm-sat-11', label: "Dad's Sleep Prep", time: '10-10:30 PM', startHour: 22, endHour: 22.5 },
     ]
   },
   {
     id: 'fsm-sunday',
     title: 'Sunday Schedule (Grandma\'s House Day)',
     sourceDocument: 'Family Structure Mode Protocol',
-    description: 'CRITICAL NOTE: Sunday has the highest decision-making load. Prep is mandatory to prevent overwhelm.',
-    subSections: [
-      {
-        id: 'fsm-sun-prep',
-        title: '🚨 SUNDAY PREP PROTOCOL (9:00 AM - 12:00 PM) - MANDATORY',
-        sourceDocument: 'Family Structure Mode Protocol',
-        description: 'Reduces all decision-making to pre-defined checklists. No improvisation. No "we\'ll figure it out later."',
-        items: [
-          { id: 'fsm-sun-prep-1', label: 'PHASE 1: Kids Prep (9:00 - 10:30 AM)' },
-          { id: 'fsm-sun-prep-2', label: 'PHASE 2: House Prep (10:30 - 11:15 AM)' },
-          { id: 'fsm-sun-prep-3', label: 'PHASE 3: Personal & Vehicle Prep (11:15 AM - 12:00 PM)' },
-          { id: 'fsm-sun-prep-4', label: 'DEPARTURE: 2:00 PM SHARP.' },
-        ]
-      }
+    items: [
+        { id: 'fsm-sun-1', label: "Dad's Solo FDP & Prep", time: '6-7 AM', startHour: 6, endHour: 7 },
+        { id: 'fsm-sun-2', label: 'Kids Wake, FDP & Breakfast', time: '7-9 AM', startHour: 7, endHour: 9 },
+        { id: 'fsm-sun-3', label: 'Sunday Prep Protocol: Kids Prep', time: '9-10:30 AM', startHour: 9, endHour: 10.5 },
+        { id: 'fsm-sun-4', label: 'Sunday Prep Protocol: House Prep', time: '10:30-11:15 AM', startHour: 10.5, endHour: 11.25 },
+        { id: 'fsm-sun-5', label: 'Sunday Prep Protocol: Personal & Vehicle', time: '11:15-12 PM', startHour: 11.25, endHour: 12 },
+        { id: 'fsm-sun-6', label: 'Lunch', time: '12-1 PM', startHour: 12, endHour: 13 },
+        { id: 'fsm-sun-7', label: 'Free Play / Pack Up', time: '1-2 PM', startHour: 13, endHour: 14 },
+        { id: 'fsm-sun-8', label: "Depart for Grandma's House", time: '2 PM', startHour: 14, endHour: 14.5 },
+        { id: 'fsm-sun-9', label: "Grandma's House", time: '2:30-7 PM', startHour: 14.5, endHour: 19 },
+        { id: 'fsm-sun-10', label: 'Return Home & Wind Down', time: '7-8:30 PM', startHour: 19, endHour: 20.5 },
+        { id: 'fsm-sun-11', label: "Dad's Decompression & Reset", time: '8:30-10:30 PM', startHour: 20.5, endHour: 22.5 },
     ]
   },
   {
     id: 'fsm-monday',
     title: 'Monday Morning Departure & Recovery',
     sourceDocument: 'Family Structure Mode Protocol',
-    description: 'After children depart, execute a 6-hour Recovery & Transition protocol: Decompress, full house reset, mental transition, physical regulation. Solo Execution Mode becomes active at 6:00 PM.',
+    items: [
+        { id: 'fsm-mon-1', label: "Dad's Solo FDP", time: '6-7 AM', startHour: 6, endHour: 7 },
+        { id: 'fsm-mon-2', label: 'Kids Wake, FDP & Breakfast', time: '7-8 AM', startHour: 7, endHour: 8 },
+        { id: 'fsm-mon-3', label: 'School Prep & Departure', time: '8-8:30 AM', startHour: 8, endHour: 8.5 },
+        { id: 'fsm-mon-4', label: "Dad's Recovery & Transition Protocol", time: '8:30 AM - 6 PM', startHour: 8.5, endHour: 18 },
+    ]
   },
   {
     id: 'fsm-checklist',
     title: 'Execution Checklist (Daily)',
     sourceDocument: 'Family Structure Mode Protocol',
     items: [
-      { id: 'fsm-check-1', label: 'Morning:' },
-      { id: 'fsm-check-2', label: 'Core Blocks:' },
-      { id: 'fsm-check-3', label: 'Evening:' },
+      { id: 'fsm-check-1', label: 'Morning: Adhere to morning routine for kids. No deviations.' },
+      { id: 'fsm-check-2', label: 'Core Blocks: Execute structured activities as planned. Use timers.' },
+      { id: 'fsm-check-3', label: 'Evening: Initiate wind-down on schedule. Enforce bedtime protocol.' },
     ]
   },
   {
@@ -611,848 +517,728 @@ export const ALL_CHECKLIST_DATA: ChecklistSectionData[] = [
       { id: 'fsm-tool-4', label: 'Fixed Meal Schedule (Eliminates decision fatigue)' },
     ]
   },
-  // LifeMaintenanceProtocol.tsx
+  // Co-Parenting Communication Protocol
   {
-    id: 'lmp-philosophy',
-    title: 'Philosophy',
-    sourceDocument: 'Life Maintenance Protocol',
-    description: 'These tasks are not moral issues. They are mechanical systems.',
+    id: 'cpp-principles',
+    title: 'Core Principles',
+    sourceDocument: 'Co-Parenting Communication Protocol',
+    description: 'This protocol governs all non-emergency communication. The goal is to reduce friction and maintain focus on the children\'s well-being. All communication must be: Fact-based, Child-focused, and Actionable.',
     items: [
-      { id: 'lmp-phil-1', label: 'Dirty house ≠ lazy. It means your maintenance system failed.' },
-      { id: 'lmp-phil-2', label: 'Empty fridge ≠ irresponsible. It means your grocery protocol broke.' },
-      { id: 'lmp-phil-3', label: 'Skipped shower ≠ gross. It means your hygiene routine hit friction.' },
+        { id: 'cpp-prin-1', label: 'No emotional language. No blame. No sarcasm.' },
+        { id: 'cpp-prin-2', label: 'All discussions must directly relate to the children\'s logistics or needs.' },
+        { id: 'cpp-prin-3', label: 'Every message should have a clear purpose or requested action.' },
     ]
   },
   {
-    id: 'lmp-cleaning',
-    title: 'SECTION 1: HOUSE CLEANING',
-    sourceDocument: 'Life Maintenance Protocol',
-    description: 'The Solution: Zone-Based Maintenance. Don\'t clean the house. Maintain zones on a rotation.',
+    id: 'cpp-pre-comm',
+    title: 'Pre-Communication Checklist',
+    sourceDocument: 'Co-Parenting Communication Protocol',
+    description: 'Execute before sending any message.',
+    items: [
+        { id: 'cpp-pre-1', label: 'Is this information necessary to share right now?' },
+        { id: 'cpp-pre-2', label: 'Is this a logistical issue or an emotional reaction?' },
+        { id: 'cpp-pre-3', label: 'Can this wait for a scheduled communication time?' },
+        { id: 'cpp-pre-4', label: 'Have I gathered all the necessary facts (dates, times, locations)?' },
+        { id: 'cpp-pre-5', label: 'Have I used the AI Communication Coach to translate this message into a low-conflict format?' },
+    ]
+  },
+  {
+    id: 'cpp-channels',
+    title: 'Communication Channels',
+    sourceDocument: 'Co-Parenting Communication Protocol',
+    description: 'The designated channels for specific types of information.',
     subSections: [
-      {
-        id: 'lmp-daily-clean',
-        title: 'DAILY MAINTENANCE (15 Minutes Total)',
-        sourceDocument: 'Life Maintenance Protocol',
-        description: 'Rule: Do these BEFORE they become emergencies. Set a 5-minute timer per zone.',
-        items: [
-          { id: 'lmp-daily-1', label: 'Zone 1: Kitchen (5 min):' },
-          { id: 'lmp-daily-2', label: 'Zone 2: Bathroom (5 min):' },
-          { id: 'lmp-daily-3', label: 'Zone 3: Living Space (5 min):' },
-        ]
-      },
-      {
-        id: 'lmp-weekly-clean',
-        title: 'WEEKLY DEEP CLEAN (60 Minutes)',
-        sourceDocument: 'Life Maintenance Protocol',
-        description: 'Schedule: Sunday 9-10 AM. 4-week rotation.',
-        items: [
-          { id: 'lmp-weekly-1', label: 'Week 1:' },
-          { id: 'lmp-weekly-2', label: 'Week 2:' },
-          { id: 'lmp-weekly-3', label: 'Week 3:' },
-          { id: 'lmp-weekly-4', label: 'Week 4:' },
-        ]
-      }
+        {
+            id: 'cpp-chan-urgent',
+            title: 'Urgent/Emergency',
+            sourceDocument: 'Co-Parenting Communication Protocol',
+            items: [{ id: 'cpp-chan-urgent-1', label: 'Phone Call or Text Message (e.g., child is sick, change of plans within 24 hours).' }],
+        },
+        {
+            id: 'cpp-chan-logistics',
+            title: 'Standard Logistics',
+            sourceDocument: 'Co-Parenting Communication Protocol',
+            items: [{ id: 'cpp-chan-logistics-1', label: 'Shared Calendar (Appointments, school events, holidays).' }],
+        },
+        {
+            id: 'cpp-chan-info',
+            title: 'Non-Urgent Information',
+            sourceDocument: 'Co-Parenting Communication Protocol',
+            items: [{ id: 'cpp-chan-info-1', label: 'Shared Family Log (e.g., medication updates, school feedback, behavioral notes).' }],
+        }
+    ]
+  },
+  {
+    id: 'cpp-response',
+    title: 'Responding to Incoming Communication',
+    sourceDocument: 'Co-Parenting Communication Protocol',
+    description: 'A protocol for processing and responding to messages from the co-parent to minimize emotional reactivity.',
+    items: [
+        { id: 'cpp-resp-1', label: 'Acknowledge receipt if time-sensitive (e.g., "Got it," "Confirmed").' },
+        { id: 'cpp-resp-2', label: 'Use the AI Communication Coach to analyze the incoming message for facts vs. emotion.' },
+        { id: 'cpp-resp-3', label: 'Draft a reply that ONLY addresses the factual/logistical components.' },
+        { id: 'cpp-resp-4', label: 'Adhere to a 24-hour response time for non-urgent matters.' },
+    ]
+  },
+  // Developer Compliance Protocol
+  {
+    id: 'dcp-purpose',
+    title: '1.0 Purpose & Scope',
+    sourceDocument: 'Developer Compliance Protocol',
+    description: 'This meta-protocol is engaged when any non-conforming condition (bug, error, instability) is detected in the Wonky Sprout OS. Its purpose is to enforce a structured, diagnostic-first approach to all system modifications and prevent "shooting from the hip." Complacency kills system integrity.',
+  },
+  {
+    id: 'dcp-principles',
+    title: '2.0 Core Principles',
+    sourceDocument: 'Developer Compliance Protocol',
+    items: [
+      { id: 'dcp-prin-1', label: '**DIAGNOSE ROOT CAUSE:** Do not treat symptoms. A syntax error is a symptom; the lack of a build step is the root cause. Identify the true source of failure before implementing a fix.' },
+      { id: 'dcp-prin-2', label: '**PROCEDURE OVER HASTE:** Follow the established procedure. Ad-hoc fixes introduce instability. The protocol is the only path to a stable system.' },
+      { id: 'dcp-prin-3', label: '**CODIFY THE FIX:** If a new class of failure is discovered, a new protocol must be written to prevent its recurrence. This is non-negotiable.' },
+      { id: 'dcp-prin-4', label: '**VERIFY COMPLIANCE:** After a corrective action is implemented, perform a full system diagnostic to ensure the fix has not introduced new non-conforming conditions.' },
+    ]
+  },
+  {
+    id: 'dcp-procedure',
+    title: '3.0 Corrective Action Procedure',
+    sourceDocument: 'Developer Compliance Protocol',
+    items: [
+      { id: 'dcp-proc-1', label: '**Step 1: Identify Non-Conforming Condition.** Acknowledge the bug report or system alert. State the observed symptom clearly.' },
+      { id: 'dcp-proc-2', label: '**Step 2: Conduct Root Cause Analysis (RCA).** Investigate beyond the surface-level error. Ask "Why?" until the foundational failure is identified.' },
+      { id: 'dcp-proc-3', label: '**Step 3: Formulate Corrective Action Plan (CAP).** Define the precise engineering solution that addresses the root cause. Reject shallow patches.' },
+      { id: 'dcp-proc-4', label: '**Step 4: Execute & Verify.** Implement the CAP. Run a full suite of tests to verify that the fix is effective and has not created new regressions.' },
+      { id: 'dcp-proc-5', label: '**Step 5: Update System Documentation.** Codify the lesson by creating or updating the relevant SOP. This closes the loop and hardens the system against future failure.' },
+    ]
+  },
+  // Life Maintenance Protocol
+  {
+    id: 'lmp-overview',
+    title: 'SECTION 1: CORE PRINCIPLES',
+    sourceDocument: 'Life Maintenance Protocol',
+    description: 'These tasks are not a reflection of your worth. They are mechanical systems required for survival. This SOP removes shame by providing a tiered, capacity-based execution plan.',
+    items: [
+      { id: 'lmp-prin-1', label: 'Actionable steps must be small and concrete (e.g., "Wipe one counter," not "Clean kitchen").' },
+      { id: 'lmp-prin-2', label: 'Tiered execution allows for graceful degradation. Doing Tier 1 is a success.' },
+      { id: 'lmp-prin-3', label: 'Automate where possible (e.g., recurring grocery list, scheduled cleaning blocks).' },
+    ]
+  },
+  {
+    id: 'lmp-house',
+    title: 'SECTION 2: HOUSE CLEANING',
+    sourceDocument: 'Life Maintenance Protocol',
+    description: 'A rotational, zone-based system to prevent overwhelming buildup.',
+    subSections: [
+        {
+            id: 'lmp-house-daily',
+            title: 'Daily Maintenance (15 min)',
+            sourceDocument: 'Life Maintenance Protocol',
+            items: [
+                { id: 'actionable:lmp-daily-1', label: 'Kitchen Reset (5 min): Wipe counters, load/run dishwasher.' },
+                { id: 'actionable:lmp-daily-2', label: 'Bathroom Reset (5 min): Wipe sink, spray shower, check toilet.' },
+                { id: 'actionable:lmp-daily-3', label: 'Living Space Reset (5 min): Clear floor, fold one blanket, reset one surface.' },
+            ]
+        },
+        {
+            id: 'lmp-house-weekly',
+            title: 'Weekly Deep Clean (1 Zone per week)',
+            sourceDocument: 'Life Maintenance Protocol',
+            items: [
+                { id: 'actionable:lmp-weekly-1', label: 'Week 1: Kitchen Deep Clean (Stove, microwave, floors).' },
+                { id: 'actionable:lmp-weekly-2', label: 'Week 2: Bathroom Deep Clean (Scrub shower, toilet, floors).' },
+                { id: 'actionable:lmp-weekly-3', label: 'Week 3: Bedroom Deep Clean (Change sheets, dust, vacuum).' },
+                { id: 'actionable:lmp-weekly-4', label: 'Week 4: Living Area Deep Clean (Vacuum, dust all surfaces).' },
+            ]
+        }
     ]
   },
   {
     id: 'lmp-groceries',
-    title: 'SECTION 2: GROCERIES',
+    title: 'SECTION 3: GROCERIES',
     sourceDocument: 'Life Maintenance Protocol',
-    description: 'The Solution: Template-Based Shopping. Stop planning meals. Use a template list to eliminate decision fatigue.',
+    description: 'A templated, list-driven approach to eliminate decision fatigue.',
     subSections: [
       {
-        id: 'lmp-grocery-list',
-        title: 'Hidden',
+        id: 'lmp-grocery-template',
+        title: 'Templated Grocery List',
         sourceDocument: 'Life Maintenance Protocol',
-        description: 'Print, laminate, and keep on fridge. Shop when 50% of boxes are checked.',
+        description: 'This is the master list. Add items for specific meals as needed.',
         subSections: [
-          { id: 'lmp-groc-p', title: 'Proteins (Pick 3-4)', sourceDocument: 'Life Maintenance Protocol', items: [{ id: 'lmp-groc-p1', label: 'Eggs' }, { id: 'lmp-groc-p2', label: 'Rotisserie Chicken' }, { id: 'lmp-groc-p3', label: 'Ground Beef' }, { id: 'lmp-groc-p4', label: 'Canned Tuna' }] },
-          { id: 'lmp-groc-c', title: 'Carbs (Pick 3-4)', sourceDocument: 'Life Maintenance Protocol', items: [{ id: 'lmp-groc-c1', label: 'Bread' }, { id: 'lmp-groc-c2', label: 'Pasta' }, { id: 'lmp-groc-c3', label: 'Rice' }, { id: 'lmp-groc-c4', label: 'Tortillas' }] },
-          { id: 'lmp-groc-v', title: 'Vegetables (Pick 4-5)', sourceDocument: 'Life Maintenance Protocol', items: [{ id: 'lmp-groc-v1', label: 'Baby Carrots' }, { id: 'lmp-groc-v2', label: 'Bagged Salad' }, { id: 'lmp-groc-v3', label: 'Frozen Veggies' }, { id: 'lmp-groc-v4', label: 'Canned Veggies' }] },
-          { id: 'lmp-groc-f', title: 'Fruits (Pick 2-3)', sourceDocument: 'Life Maintenance Protocol', items: [{ id: 'lmp-groc-f1', label: 'Apples' }, { id: 'lmp-groc-f2', label: 'Bananas' }, { id: 'lmp-groc-f3', label: 'Applesauce Cups' }] },
-          { id: 'lmp-groc-d', title: 'Dairy (Pick 3-4)', sourceDocument: 'Life Maintenance Protocol', items: [{ id: 'lmp-groc-d1', label: 'Milk' }, { id: 'lmp-groc-d2', label: 'Yogurt Cups' }, { id: 'lmp-groc-d3', label: 'Sliced/Shredded Cheese' }] },
-          { id: 'lmp-groc-e', title: 'Frozen Meals (Backup)', sourceDocument: 'Life Maintenance Protocol', items: [{ id: 'lmp-groc-e1', label: 'Frozen Pizzas' }, { id: 'lmp-groc-e2', label: 'Microwaveable Dinners' }] },
+          { id: 'lmp-grocery-produce', title: 'Produce', items: [{id: 'gl-1', label: 'Apples'}, {id: 'gl-2', label: 'Bananas'}, {id: 'gl-3', label: 'Spinach'}, {id: 'gl-4', label: 'Onions'}, {id: 'gl-5', label: 'Garlic'}] },
+          { id: 'lmp-grocery-protein', title: 'Protein', items: [{id: 'gl-6', label: 'Chicken Breast'}, {id: 'gl-7', label: 'Ground Turkey'}, {id: 'gl-8', label: 'Eggs'}, {id: 'gl-9', label: 'Tofu'}] },
+          { id: 'lmp-grocery-dairy', title: 'Dairy/Alt', items: [{id: 'gl-10', label: 'Milk (Oat)'}, {id: 'gl-11', label: 'Yogurt'}, {id: 'gl-12', label: 'Cheese'}] },
+          { id: 'lmp-grocery-pantry', title: 'Pantry', items: [{id: 'gl-13', label: 'Rice'}, {id: 'gl-14', label: 'Pasta'}, {id: 'gl-15', label: 'Canned Tomatoes'}, {id: 'gl-16', label: 'Beans'}] },
+          { id: 'lmp-grocery-household', title: 'Household', items: [{id: 'gl-17', label: 'Paper Towels'}, {id: 'gl-18', label: 'Trash Bags'}, {id: 'gl-19', label: 'Dish Soap'}] },
+          { id: 'lmp-grocery-kids', title: 'Kids\' Specifics', items: [{id: 'gl-20', label: 'Goldfish'}, {id: 'gl-21', label: 'Applesauce Pouches'}, {id: 'gl-22', label: 'Mac & Cheese'}] },
         ]
       }
     ]
   },
-  {
-    id: 'lmp-hygiene',
-    title: 'SECTION 3: PERSONAL HYGIENE',
-    sourceDocument: 'Life Maintenance Protocol',
-    description: 'The Solution: Tiered Hygiene System. Match hygiene tasks to your available capacity. Not every day requires a full shower.',
-    items: [
-      { id: 'lmp-hyg-1', label: 'Tier 1: Minimal Function Day (5 min):' },
-      { id: 'lmp-hyg-2', label: 'Tier 2: Sink Wash (10 min):' },
-      { id: 'lmp-hyg-3', label: 'Tier 3: Quick Shower (15 min):' },
-      { id: 'lmp-hyg-4', label: 'Tier 4: Full Hygiene Routine (30-45 min):' },
-    ]
-  },
-  {
-    id: 'lmp-emergency',
-    title: 'Emergency Reset Protocol',
-    sourceDocument: 'Life Maintenance Protocol',
-    description: 'When everything has collapsed. Triage and reboot.',
-    items: [
-      { id: 'lmp-emer-1', label: 'Today:' },
-      { id: 'lmp-emer-2', label: 'Tomorrow:' },
-      { id: 'lmp-emer-3', label: 'Day 3:' },
-      { id: 'lmp-emer-4', label: 'Day 4:' },
-      { id: 'lmp-emer-5', label: 'Day 5:' },
-    ]
-  },
-    // MorningTransitionProtocol.tsx
-  {
-    id: 'mtp-philosophy',
-    title: 'Protocol Philosophy',
-    sourceDocument: 'Morning Transition Protocol',
-    description: 'The neurodivergent brain needs structured transitions. This protocol removes barriers like decision paralysis, executive dysfunction, and cognitive fog through a fixed sequence and automated decisions.',
-  },
-  {
-    id: 'mtp-overview',
-    title: 'Transition Overview',
-    sourceDocument: 'Morning Transition Protocol',
-    description: 'The morning is divided into 4 non-negotiable phases:',
-    items: [
-      { id: 'mtp-overview-1', label: 'Physical Activation (6:00-6:15 AM)' },
-      { id: 'mtp-overview-2', label: 'Environment Setup (6:15-6:30 AM)' },
-      { id: 'mtp-overview-3', label: 'Mental Calibration (6:30-6:45 AM)' },
-      { id: 'mtp-overview-4', label: 'Execution Launch (6:45-7:00 AM)' },
-    ]
-  },
+  // MorningTransitionProtocol.tsx
   {
     id: 'mtp-phase1',
-    title: 'Phase 1: Physical Activation (6:00-6:15 AM)',
+    title: 'PHASE 1: PHYSICAL SYSTEM BOOT (0-15 Minutes Post-Wake)',
     sourceDocument: 'Morning Transition Protocol',
     items: [
-      { id: 'mtp-p1-1', label: '6:00-6:02 AM - Wake & Water Protocol:' },
-      { id: 'mtp-p1-2', label: '6:02-6:03 AM - Pill Protocol:' },
-      { id: 'mtp-p1-3', label: '6:03-6:10 AM - Movement Activation:' },
-      { id: 'mtp-p1-4', label: '6:10-6:15 AM - Caffeine Protocol:' },
+      { id: 'mtp-p1-1', label: 'Step 1: Foundational Protocol 1 (Water)' },
+      { id: 'mtp-p1-2', label: 'Step 2: Foundational Protocol 2 (Pills)' },
+      { id: 'mtp-p1-3', label: 'Step 3: Light Exposure (10 min)' },
+      { id: 'mtp-p1-4', label: 'Step 4: Mobility Protocol (5 min)' },
     ]
   },
   {
     id: 'mtp-phase2',
-    title: 'Phase 2: Environment Setup (6:15-6:30 AM)',
+    title: 'PHASE 2: MENTAL SYSTEM BOOT (15-30 Minutes Post-Wake)',
     sourceDocument: 'Morning Transition Protocol',
     items: [
-      { id: 'mtp-p2-1', label: '6:15-6:20 AM - Command Center Activation:' },
-      { id: 'mtp-p2-2', label: '6:20-6:25 AM - Digital Environment Setup:' },
-      { id: 'mtp-p2-3', label: '6:25-6:30 AM - Bubble Shield Deployment:' },
+      { id: 'mtp-p2-1', label: 'Step 5: Foundational Protocol 3 (Capture)' },
+      { id: 'mtp-p2-2', label: 'Step 6: Review Daily Briefing (5 min)' },
+      { id: 'mtp-p2-3', label: 'Step 7: Single Task Selection (2 min)' },
     ]
   },
   {
     id: 'mtp-phase3',
-    title: 'Phase 3: Mental Calibration (6:30-6:45 AM)',
+    title: 'PHASE 3: ENVIRONMENT BOOT (30-45 Minutes Post-Wake)',
     sourceDocument: 'Morning Transition Protocol',
     items: [
-      { id: 'mtp-p3-1', label: '6:30-6:35 AM - Calendar Review:' },
-      { id: 'mtp-p3-2', label: '6:35-6:42 AM - Task Triage & Priority Selection:' },
-      { id: 'mtp-p3-3', label: '6:42-6:45 AM - Mental Transition Ritual:' },
+      { id: 'mtp-p3-1', label: 'Step 8: Make Bed (2 min)' },
+      { id: 'mtp-p3-2', label: 'Step 9: Tidy One Surface (3 min)' },
+      { id: 'mtp-p3-3', label: 'Step 10: Launch First Task' },
+    ]
+  },
+    // PersonalHygieneProtocol.tsx
+  {
+    id: 'php-tier1',
+    title: 'TIER 1: SURVIVAL MODE (5 Minutes, Lowest Capacity)',
+    sourceDocument: 'Personal Hygiene Protocol',
+    description: 'Goal: Prevent immediate health issues. This is a complete success when capacity is low.',
+    items: [
+      { id: 'php-t1-1', label: 'Brush teeth (2 min).' },
+      { id: 'php-t1-2', label: 'Use face wipe or rinse face with water (30s).' },
+      { id: 'php-t1-3', label: 'Apply deodorant (30s).' },
+      { id: 'php-t1-4', label: 'Change into fresh clothes (even if it\'s just clean pajamas) (2 min).' },
     ]
   },
   {
-    id: 'mtp-phase4',
-    title: 'Phase 4: Execution Launch (6:45-7:00 AM)',
-    sourceDocument: 'Morning Transition Protocol',
+    id: 'php-tier2',
+    title: 'TIER 2: MAINTENANCE MODE (15 Minutes, Medium Capacity)',
+    sourceDocument: 'Personal Hygiene Protocol',
+    description: 'Goal: Maintain a baseline of cleanliness and comfort.',
     items: [
-      { id: 'mtp-p4-1', label: '6:45-6:50 AM - Pre-Launch Check:' },
-      { id: 'mtp-p4-2', label: '6:50-6:55 AM - First Micro-Action Execution:' },
-      { id: 'mtp-p4-3', label: '6:55-7:00 AM - Momentum Lock:' },
+      { id: 'php-t2-1', label: '**All Tier 1 tasks PLUS:**' },
+      { id: 'php-t2-2', label: 'Quick shower (5-10 min). Soap key areas only.' },
+      { id: 'php-t2-3', label: 'Basic skincare (e.g., moisturizer).' },
+      { id: 'php-t2-4', label: 'Brush hair.' },
     ]
   },
   {
-    id: 'mtp-checklist',
-    title: 'Execution Checklist',
-    sourceDocument: 'Morning Transition Protocol',
-    description: 'This entire sequence is designed to be a single, continuous flow. Check off each phase as you complete it.',
-  },
-  // PersonalHygieneProtocol.tsx
-  {
-    id: 'php-problem',
-    title: 'The Core Problem',
+    id: 'php-tier3',
+    title: 'TIER 3: FULL SYSTEM REFRESH (30+ Minutes, High Capacity)',
     sourceDocument: 'Personal Hygiene Protocol',
-    description: 'Sensory issues + executive dysfunction + depression = hygiene tasks feel impossible. It\'s not the hygiene itself, but the sequence of micro-tasks and sensory inputs. This is not laziness. This is system overload.',
-  },
-  {
-    id: 'php-solution',
-    title: 'The Solution: Tiered Hygiene System',
-    sourceDocument: 'Personal Hygiene Protocol',
-    description: 'Not every day requires a full shower. Match hygiene to your capacity. Lower tier ≠ failure.',
+    description: 'Goal: A full reset. Do not attempt this if capacity is not high, as it can lead to burnout.',
     items: [
-      { id: 'php-sol-1', label: 'Tier 1: Minimal function (5 min)' },
-      { id: 'php-sol-2', label: 'Tier 2: Sink wash (10 min)' },
-      { id: 'php-sol-3', label: 'Tier 3: Quick shower (15 min)' },
-      { id: 'php-sol-4', label: 'Tier 4: Full routine (30-45 min)' },
+      { id: 'php-t3-1', label: '**All Tier 2 tasks PLUS:**' },
+      { id: 'php-t3-2', label: 'Full, thorough shower (shampoo, condition, etc.).' },
+      { id: 'php-t3-3', label: 'Full skincare routine.' },
+      { id: 'php-t3-4', label: 'Shaving / other grooming tasks.' },
+      { id: 'php-t3-5', label: 'Flossing.' },
     ]
   },
+  // SoloExecutionModeProtocol.tsx
   {
-    id: 'php-t1',
-    title: '🟢 Tier 1: Minimal Function Day (5 Minutes)',
-    sourceDocument: 'Personal Hygiene Protocol',
-    description: 'When to Use: Can\'t shower. Depression, exhaustion, executive dysfunction freeze. Goal is to do the minimum to not feel gross.',
-    items: [
-      { id: 'php-t1-1', label: 'Face Wipe (1 min):' },
-      { id: 'php-t1-2', label: 'Deodorant (30 sec):' },
-      { id: 'php-t1-3', label: 'Teeth (2 min):' },
-      { id: 'php-t1-4', label: 'Hair (1 min):' },
-      { id: 'php-t1-5', label: 'Clothes (30 sec):' },
-    ],
-    validation: 'Validation: You are clean enough to exist in the world. This counts.',
-  },
-  {
-    id: 'php-t2',
-    title: '🟡 Tier 2: Sink Wash (10 Minutes)',
-    sourceDocument: 'Personal Hygiene Protocol',
-    description: 'When to Use: Shower feels impossible but you want to feel cleaner than Tier 1. Goal is to wash the important parts without a full shower.',
-    items: [
-      { id: 'php-t2-1', label: 'Face Wash (2 min):' },
-      { id: 'php-t2-2', label: 'Armpit Wash (2 min):' },
-      { id: 'php-t2-3', label: 'Groin Wash (2 min):' },
-      { id: 'php-t2-4', label: 'Deodorant (30 sec):' },
-      { id: 'php-t2-5', label: 'Teeth (2 min):' },
-      { id: 'php-t2-6', label: 'Fresh Clothes (30 sec):' },
-    ],
-    validation: 'Validation: This is valid hygiene. You don\'t need a shower to be clean.',
-  },
-  {
-    id: 'php-t3',
-    title: '🟠 Tier 3: Quick Shower (15 Minutes)',
-    sourceDocument: 'Personal Hygiene Protocol',
-    description: 'When to Use: Can manage a shower but need it fast. Goal is to get in, wash critical areas, and get out.',
-    items: [
-      { id: 'php-t3-1', label: 'Pre-Shower Setup (2 min):' },
-      { id: 'php-t3-2', label: 'In-Shower Protocol (10 min):' },
-      { id: 'php-t3-3', label: 'Post-Shower Protocol (3 min):' },
-    ],
-    validation: 'Validation: You cleaned your body. That\'s the goal. Everything else is extra.',
-  },
-  {
-    id: 'php-t4',
-    title: '🔴 Tier 4: Full Hygiene Routine (30-45 Minutes)',
-    sourceDocument: 'Personal Hygiene Protocol',
-    description: 'When to Use: You have the capacity for complete maintenance. Feeling good, have time, want to do "the full thing."',
-    items: [
-      { id: 'php-t4-1', label: 'Pre-Shower (5 min):' },
-      { id: 'php-t4-2', label: 'Full Shower (20 min):' },
-      { id: 'php-t4-3', label: 'Post-Shower (10 min):' },
-      { id: 'php-t4-4', label: 'Full Teeth Protocol (5 min):' },
-    ]
-  },
-  {
-    id: 'php-frequency',
-    title: 'Frequency Guide',
-    sourceDocument: 'Personal Hygiene Protocol',
-    description: 'Adjust based on your actual capacity, not "shoulds."',
-    items: [
-      { id: 'php-freq-1', label: 'Daily Minimum:' },
-      { id: 'php-freq-2', label: 'Every 2-3 Days:' },
-      { id: 'php-freq-3', label: 'Weekly:' },
-    ]
-  },
-  {
-    id: 'php-troubleshoot',
-    title: 'Troubleshooting',
-    sourceDocument: 'Personal Hygiene Protocol',
-    description: '',
-    items: [
-      { id: 'php-ts-1', label: '"I haven\'t showered in a week":' },
-      { id: 'php-ts-2', label: '"Showers trigger anxiety":' },
-      { id: 'php-ts-3', label: '"I shower but then can\'t get dressed":' },
-    ]
-  },
-    // SoloExecutionModeProtocol.tsx
-  {
-    id: 'sem-daily',
-    title: 'Daily Schedule (Hourly Breakdown)',
+    id: 'sem-overview',
+    title: 'Overview & Principles',
     sourceDocument: 'Solo Execution Mode Protocol',
     items: [
-      { id: 'sem-sched-1', label: '6:00 AM - Morning Protocols:' },
-      { id: 'sem-sched-2', label: '6:03 AM - 7:00 AM | Morning Routine:' },
-      { id: 'sem-sched-3', label: '7:00 AM - 8:00 AM | Planning & Filing:' },
-      { id: 'sem-sched-4', label: '8:00 AM - 12:00 PM | Core Work Block 1 (4 hours):' },
-      { id: 'sem-sched-5', label: '12:00 PM - 12:30 PM | Lunch & Reset:' },
-      { id: 'sem-sched-6', label: '12:30 PM - 3:30 PM | Core Work Block 2 (3 hours):' },
-      { id: 'sem-sched-7', label: '3:30 PM - 4:00 PM | Movement Protocol:' },
-      { id: 'sem-sched-8', label: '4:00 PM - 5:00 PM | Buffer & Admin:' },
-      { id: 'sem-sched-9', label: '5:00 PM - 6:00 PM | Dinner & Wind Down:' },
-      { id: 'sem-sched-10', label: '6:00 PM - 10:00 PM | Personal Time:' },
-      { id: 'sem-sched-11', label: '10:00 PM - 10:30 PM | Evening Protocols:', achievementAwardId: 'solo-mode-week-complete' },
+      { id: 'sem-prin-1', label: 'Principle 1: The Schedule is Law.' },
+      { id: 'sem-prin-2', label: 'Principle 2: Protect Your Focus Blocks.' },
+      { id: 'sem-prin-3', label: 'Principle 3: Capture, Don\'t Process.' },
     ]
   },
   {
-    id: 'sem-monday',
-    title: 'Monday Special: Meal Prep Day',
+    id: 'sem-schedule',
+    title: 'Daily Schedule Template (Mon-Fri)',
     sourceDocument: 'Solo Execution Mode Protocol',
-    description: '7:00 AM - 8:00 AM | Meal Prep (Replaces Planning & Filing): Prepare 12-15 meals for the week (breakfast, lunch, dinner) and store in labeled, ready-to-grab containers. Planning & Filing block moves to 8:00 AM, Core Work starts at 9:00 AM.',
-  },
-  {
-    id: 'sem-weekly',
-    title: 'Weekly Schedule Template',
-    sourceDocument: 'Solo Execution Mode Protocol',
-    description: 'This is a visual representation of the schedule.',
-    items: [
-      { id: 'sem-template-code', label: `MONDAY
-7:00 AM  │ MEAL PREP (1 hr)
-8:00 AM  │ Planning & Filing (1 hr)
-9:00 AM  │ Core Work Block 1 (4 hrs)
-
-TUESDAY - THURSDAY (Standard Days)
-7:00 AM  │ Planning & Filing (1 hr)
-8:00 AM  │ Core Work Block 1 (4 hrs)
-
-FRIDAY (Transition Day)
-...
-3:30 PM  │ FULL ENVIRONMENT PREP (Family Mode Setup)
-4:00 PM  │ MODE SWITCH → Family Structure Mode Begins` }
+    subSections: [
+        {
+            id: 'sem-sched-morning',
+            title: 'Morning Block (6 AM - 12 PM)',
+            sourceDocument: 'Solo Execution Mode Protocol',
+            items: [
+              { id: 'sem-item-1', label: '6:00 - 7:00: Morning Transition Protocol' },
+              { id: 'sem-item-2', label: '7:00 - 8:30: Deep Work Block 1 (High Priority)' },
+              { id: 'sem-item-3', label: '8:30 - 9:00: Buffer / Admin / Comms' },
+              { id: 'sem-item-4', label: '9:00 - 11:00: Deep Work Block 2 (Scheduled Meetings or Creative Work)' },
+              { id: 'sem-item-5', label: '11:00 - 12:00: Shallow Work / Task Triage' },
+            ]
+        },
+         {
+            id: 'sem-sched-afternoon',
+            title: 'Afternoon Block (12 PM - 6 PM)',
+            sourceDocument: 'Solo Execution Mode Protocol',
+            items: [
+              { id: 'sem-item-6', label: '12:00 - 1:00: Lunch & Decompression (NO SCREENS)' },
+              { id: 'sem-item-7', label: '1:00 - 3:00: Deep Work Block 3 (Project Work)' },
+              { id: 'sem-item-8', label: '3:00 - 4:00: Buffer / Admin / Comms' },
+              { id: 'sem-item-9', label: '4:00 - 6:00: Kids Handoff & Family Mode Transition' },
+            ]
+        }
     ]
   },
   {
     id: 'sem-checklist',
-    title: 'Execution Checklist (Daily)',
-    sourceDocument: 'Solo Execution Mode Protocol',
-    subSections: [
-      {
-        id: 'sem-check-morning',
-        title: 'Morning',
-        sourceDocument: 'Solo Execution Mode Protocol',
-        items: [
-          { id: 'sem-check-1', label: '6:00 AM: FDP (Water, Pills)' },
-          { id: 'sem-check-2', label: '7:00 AM: Planning & Filing' },
-        ]
-      },
-      {
-        id: 'sem-check-work',
-        title: 'Work Blocks',
-        sourceDocument: 'Solo Execution Mode Protocol',
-        items: [
-          { id: 'sem-check-3', label: '8:00 AM: Core Work Block 1' },
-          { id: 'sem-check-4', label: '12:00 PM: Lunch & Tidy' },
-          { id: 'sem-check-5', label: '12:30 PM: Core Work Block 2' },
-        ]
-      },
-      {
-        id: 'sem-check-evening',
-        title: 'Afternoon/Evening',
-        sourceDocument: 'Solo Execution Mode Protocol',
-        items: [
-          { id: 'sem-check-6', label: '3:30 PM: Movement Protocol' },
-          { id: 'sem-check-7', label: '5:00 PM: Dinner & Wind Down' },
-          { id: 'sem-check-8', label: '10:00 PM: FDP (Sleep Prep, etc.)' },
-        ]
-      }
-    ]
-  },
-  {
-    id: 'sem-tools',
-    title: 'Tools Required',
+    title: 'Daily Execution Checklist',
     sourceDocument: 'Solo Execution Mode Protocol',
     items: [
-      { id: 'sem-tool-1', label: 'Soundcore Space One Headphones (Bubble Shield Profile 1.0)' },
-      { id: 'sem-tool-2', label: 'VS Code (Command Center)' },
-      { id: 'sem-tool-3', label: 'Google Tasks (3 critical tasks)' },
-      { id: 'sem-tool-4', label: 'Google Keep & Soundcore AI Recorder (Capture processing)' },
-      { id: 'sem-tool-5', label: 'NotebookLM (Permanent filing)' },
-      { id: 'sem-tool-6', label: 'Pomodoro Timer (25/5 intervals)' },
+      { id: 'sem-check-1', label: 'Morning: MTP executed successfully.', achievementAwardId: 'first-focus-session' },
+      { id: 'sem-check-2', label: 'Mid-Day: Lunch decompression protocol followed (no screens).' },
+      { id: 'sem-check-3', label: 'End of Day: Task Matrix inbox is at zero.' },
+      { id: 'sem-check-4', label: 'All Day: Bubble Shield Protocol active during all deep work blocks.' },
     ]
   },
   // CommandCenterSetupSop.tsx
   {
-    id: 'ccs-space',
-    title: '1.0 Space Requirements',
+    id: 'ccs-principles',
+    title: 'Core Principles',
     sourceDocument: 'Command Center Setup SOP',
-    description: 'Fixed spatial boundaries create predictability and reduce sensory overwhelm.',
     items: [
-      { id: 'ccs-space-1', label: 'Desk Surface:' },
-      { id: 'ccs-space-2', label: 'Clearance:' },
-      { id: 'ccs-space-3', label: 'Height:' },
-      { id: 'ccs-space-4', label: 'Optimal:' },
+      { id: 'ccs-prin-1', label: 'Friction Reduction is Paramount' },
+      { id: 'ccs-prin-2', label: 'Ergonomics are Non-Negotiable' },
+      { id: 'ccs-prin-3', label: 'Everything Has a Home' },
+      { id: 'ccs-prin-4', label: 'Digital and Physical Spaces Must Be Integrated' },
     ]
   },
   {
-    id: 'ccs-hardware',
-    title: '2.0 Hardware: Tier System',
+    id: 'ccs-equipment',
+    title: 'Equipment List',
     sourceDocument: 'Command Center Setup SOP',
     subSections: [
-      {
-        id: 'ccs-hw-t1',
-        title: 'TIER 1: MUST HAVES (Non-Negotiable)',
-        sourceDocument: 'Command Center Setup SOP',
-        items: [
-          { id: 'ccs-hw-t1-1', label: 'Primary Computing:' },
-          { id: 'ccs-hw-t1-2', label: 'Display System:' },
-          { id: 'ccs-hw-t1-3', label: 'Input Devices:' },
-          { id: 'ccs-hw-t1-4', label: 'Audio System:' },
-          { id: 'ccs-hw-t1-5', label: 'Power Infrastructure:' },
-        ]
-      },
-      {
-        id: 'ccs-hw-t2',
-        title: 'TIER 2: ESSENTIALS (Highly Recommended)',
-        sourceDocument: 'Command Center Setup SOP',
-        items: [
-          { id: 'ccs-hw-t2-1', label: 'Ergonomics:' },
-          { id: 'ccs-hw-t2-2', label: 'Lighting:' },
-          { id: 'ccs-hw-t2-3', label: 'Cable Management:' },
-        ]
-      }
-    ]
-  },
-  {
-    id: 'ccs-software',
-    title: '3.0 Software Stack',
-    sourceDocument: 'Command Center Setup SOP',
-    items: [
-      { id: 'ccs-sw-1', label: 'OS:' },
-      { id: 'ccs-sw-2', label: 'Core Dev Environment:' },
-      { id: 'ccs-sw-3', label: 'Google Workspace:' },
-      { id: 'ccs-sw-4', label: 'Utilities:' },
+      { id: 'ccs-equip-core', title: 'Core Computing', items: [
+        {id: 'ccs-eq-c-1', label: 'M4 MacBook Pro 16" (Primary)'},
+        {id: 'ccs-eq-c-2', label: 'Dell 32" 4K Monitor (Primary Display)'},
+        {id: 'ccs-eq-c-3', label: 'LG 27" 4K Monitor (Secondary, Vertical)'},
+        {id: 'ccs-eq-c-4', label: 'Caldigit TS4 Thunderbolt Dock'},
+      ]},
+      { id: 'ccs-equip-periph', title: 'Peripherals', items: [
+        {id: 'ccs-eq-p-1', label: 'Logitech MX Master 3S Mouse'},
+        {id: 'ccs-eq-p-2', label: 'Logitech MX Mechanical Keyboard'},
+        {id: 'ccs-eq-p-3', label: 'Logitech Brio 4K Webcam'},
+        {id: 'ccs-eq-p-4', label: 'Elgato Stream Deck'},
+      ]},
+      { id: 'ccs-equip-audio', title: 'Audio & Sensory', items: [
+        {id: 'ccs-eq-a-1', label: 'Soundcore Space One Headphones (Bubble Shield)'},
+        {id: 'ccs-eq-a-2', label: 'AnkerWork M650 Wireless Mic'},
+        {id: 'ccs-eq-a-3', label: 'Anker PowerCast M300 USB Mic'},
+        {id: 'ccs-eq-a-4', label: 'Anker AI Voice Recorder'},
+      ]},
+      { id: 'ccs-equip-space', title: 'Workspace', items: [
+        {id: 'ccs-eq-s-1', label: 'Standing Desk (min 60" width)'},
+        {id: 'ccs-eq-s-2', label: 'Ergonomic Chair (Herman Miller Aeron)'},
+        {id: 'ccs-eq-s-3', label: 'Monitor Arms (x2)'},
+        {id: 'ccs-eq-s-4', label: 'Under-desk cable management tray'},
+      ]},
     ]
   },
   {
     id: 'ccs-setup',
-    title: '5.0 Setup Procedure (Deployment Checklist)',
+    title: 'Setup & Configuration',
     sourceDocument: 'Command Center Setup SOP',
     subSections: [
-      {
-        id: 'ccs-setup-physical',
-        title: 'Phase 1 & 2: Physical & Hardware',
-        sourceDocument: 'Command Center Setup SOP',
-        items: [
-          { id: 'ccs-setup-1', label: 'Assemble and position desk.' },
-          { id: 'ccs-setup-2', label: 'Install cable management.' },
-          { id: 'ccs-setup-3', label: 'Connect monitor, keyboard, mouse.' },
-          { id: 'ccs-setup-4', label: 'Organize cables with velcro ties.' },
-        ]
-      },
-      {
-        id: 'ccs-setup-software',
-        title: 'Phase 3, 4, 5: Software & Calibration',
-        sourceDocument: 'Command Center Setup SOP',
-        items: [
-          { id: 'ccs-setup-5', label: 'Install all software and updates.' },
-          { id: 'ccs-setup-6', label: 'Configure VS Code, Git, and Chrome.' },
-          { id: 'ccs-setup-7', label: 'Adjust monitor height and lighting.' },
-          { id: 'ccs-setup-8', label: 'Run Protocol Integration Test.' },
-        ]
-      }
+      { id: 'ccs-setup-layout', title: 'Physical Layout', items: [
+        {id: 'ccs-sl-1', label: 'Primary monitor centered at eye level.'},
+        {id: 'ccs-sl-2', label: 'Secondary monitor to the right, in vertical orientation.'},
+        {id: 'ccs-sl-3', label: 'MacBook to the left, on a stand, screen active.'},
+        {id: 'ccs-sl-4', label: 'All cables routed through dock and managed under desk.'},
+      ]},
+       { id: 'ccs-setup-software', title: 'Software Configuration', items: [
+        {id: 'ccs-ss-1', label: 'Rectangle Pro for window management.'},
+        {id: 'ccs-ss-2', label: 'Alfred for quick launch.'},
+        {id: 'ccs-ss-3', label: 'VS Code with "classicwilly" profile active.'},
+        {id: 'ccs-ss-4', label: 'Stream Deck configured for app launching and meeting controls.'},
+      ]},
     ]
   },
+  // PixelFoldSetupSop.tsx
   {
-    id: 'ccs-budget',
-    title: '7.0 Budget Summary',
-    sourceDocument: 'Command Center Setup SOP',
-    items: [
-      { id: 'ccs-budget-1', label: 'Tier 1: Must Haves:' },
-      { id: 'ccs-budget-2', label: 'Tier 2: Essentials:' },
-      { id: 'ccs-budget-3', label: 'Total Recommended (T1+T2):' },
-    ]
-  },
-    // PixelFoldSetupSop.tsx
-  {
-    id: 'pfs-rationale',
-    title: '1.0 Device Rationale',
-    sourceDocument: 'Pixel Fold Setup SOP',
-    description: 'The Pixel Fold is a structured capture tool, not a distraction device. Every setting exists to support the dual-mode life structure.',
-    items: [
-      { id: 'pfs-rat-1', label: 'Native Google Workspace Integration:' },
-      { id: 'pfs-rat-2', label: 'Dual Screen for Dual Mode:' },
-      { id: 'pfs-rat-3', label: 'Android Ecosystem:' },
-      { id: 'pfs-rat-4', label: 'Pixel-Exclusive Features:' },
-    ]
-  },
-  {
-    id: 'pfs-initial-setup',
-    title: '2.0 Initial Setup Procedure',
+    id: 'pfs-principles',
+    title: 'Core Principles',
     sourceDocument: 'Pixel Fold Setup SOP',
     items: [
-      { id: 'pfs-setup-1', label: 'Unbox and inspect device.' },
-      { id: 'pfs-setup-2', label: 'Complete setup wizard, selecting "Don\'t copy" for a clean slate.' },
-      { id: 'pfs-setup-3', label: 'Sign in with primary Google account and set up biometrics.' },
-      { id: 'pfs-setup-4', label: 'Install all system updates until the device is current.' },
-      { id: 'pfs-setup-5', label: 'Configure Display (Dark theme ON, 5 min timeout) and Sound (DND schedule set for work blocks).' },
+      { id: 'pfs-prin-1', label: 'Capture, Don\'t Process.' },
+      { id: 'pfs-prin-2', label: 'Minimize Notifications.' },
+      { id: 'pfs-prin-3', label: 'Optimize for One-Handed Use.' },
+      { id: 'pfs-prin-4', label: 'Continuity with Command Center is Key.' },
     ]
   },
   {
-    id: 'pfs-gworkspace',
-    title: '3.0 Google Workspace Integration',
+    id: 'pfs-homescreen',
+    title: 'Homescreen Configuration',
     sourceDocument: 'Pixel Fold Setup SOP',
     items: [
-      { id: 'pfs-gws-1', label: 'Account Sync:' },
-      { id: 'pfs-gws-2', label: 'Gmail:' },
-      { id: 'pfs-gws-3', label: 'Calendar:' },
-      { id: 'pfs-gws-4', label: 'Keep:' },
+      { id: 'pfs-hs-1', label: 'Outer Screen: Phone, Messages, Camera, Google Keep.' },
+      { id: 'pfs-hs-2', label: 'Inner Screen: At a Glance widget, Google Calendar, Google Tasks, Wonky Sprout OS (as PWA).' },
+      { id: 'pfs-hs-3', label: 'No social media apps on any homescreen.' },
+      { id: 'pfs-hs-4', label: 'Wallpaper set to solid black.' },
+    ]
+  },
+  {
+    id: 'pfs-notifications',
+    title: 'Notification Settings',
+    sourceDocument: 'Pixel Fold Setup SOP',
+    items: [
+      { id: 'pfs-notif-1', label: 'All social media notifications: OFF.' },
+      { id: 'pfs-notif-2', label: 'Email notifications: OFF.' },
+      { id: 'pfs-notif-3', label: 'Allowed notifications: Phone calls, Text messages (from contacts only), Calendar events.' },
+      { id: 'pfs-notif-4', label: 'Set up "Focus Mode" on Android to block all notifications during deep work blocks.' },
     ]
   },
   {
     id: 'pfs-apps',
-    title: '4.0 App Installation & Configuration',
+    title: 'Core Application Suite',
     sourceDocument: 'Pixel Fold Setup SOP',
     items: [
-      { id: 'pfs-apps-1', label: 'Essential Apps:' },
-      { id: 'pfs-apps-2', label: 'Productivity:' },
-      { id: 'pfs-apps-3', label: 'Communication (Minimal):' },
+      { id: 'pfs-app-1', label: 'Google Keep (Primary capture tool).' },
+      { id: 'pfs-app-2', label: 'Google Calendar (Time blocking).' },
+      { id: 'pfs-app-3', label: 'Google Tasks (Mirrors Task Matrix).' },
+      { id: 'pfs-app-4', label: 'Anker Soundcore App (Bubble Shield control).' },
+      { id: 'pfs-app-5', label: 'Wonky Sprout OS (as Progressive Web App).' },
     ]
   },
+   // AccessibilitySafetyProtocol.tsx
   {
-    id: 'pfs-focus-mode',
-    title: '5.0 Focus Mode Configuration',
-    sourceDocument: 'Pixel Fold Setup SOP',
-    items: [
-      { id: 'pfs-focus-1', label: 'Solo Execution Mode:' },
-      { id: 'pfs-focus-2', label: 'Family Time Mode:' },
-    ]
-  },
-  {
-    id: 'pfs-home-screen',
-    title: '6.0 Home Screen Optimization',
-    sourceDocument: 'Pixel Fold Setup SOP',
-    items: [
-      { id: 'pfs-home-1', label: 'Outer Screen (Quick Capture):' },
-      { id: 'pfs-home-2', label: 'Inner Screen (Work Layout):' },
-      { id: 'pfs-home-3', label: 'Wallpaper:' },
-    ]
-  },
-  {
-    id: 'pfs-maintenance',
-    title: '12.0 Maintenance Protocols',
-    sourceDocument: 'Pixel Fold Setup SOP',
-    items: [
-      { id: 'pfs-maint-1', label: 'Daily (2 min):' },
-      { id: 'pfs-maint-2', label: 'Weekly (During WRP):' },
-      { id: 'pfs-maint-3', label: 'Monthly:' },
-    ]
-  },
-  {
-    id: 'pfs-budget',
-    title: '16.0 Budget & Procurement',
-    sourceDocument: 'Pixel Fold Setup SOP',
-    items: [
-      { id: 'pfs-budget-1', label: 'Pixel 9 Pro Fold (Unlocked):' },
-      { id: 'pfs-budget-2', label: 'Official Case:' },
-      { id: 'pfs-budget-3', label: 'Portable Battery Pack (20,000mAh):' },
-    ]
-  },
-    // AccessibilitySafetyProtocol.tsx
-  {
-    id: 'asp-purpose',
-    title: 'Purpose',
+    id: 'asp-design',
+    title: 'Design Principles',
     sourceDocument: 'Accessibility & Safety Protocol',
     items: [
-      { id: 'asp-purpose-1', label: 'Ensure the Wonky Sprout OS site is safe, stable, and usable for late-diagnosed and neurodivergent users.' },
-      { id: 'asp-purpose-2', label: 'Provide a minimal, actionable checklist and developer workflow to prevent regressions that harm accessibility.' },
+      { id: 'asp-des-1', label: 'High Contrast is Mandatory: Use WCAG AA minimum contrast ratios for all text.' },
+      { id: 'asp-des-2', label: 'Clarity Over Aesthetics: UI must be unambiguous. If it\'s clever but confusing, it\'s a failure.' },
+      { id: 'asp-des-3', label: 'Reduce Motion: Use animations sparingly and provide options to disable them.' },
+      { id: 'asp-des-4', label: 'Consistent Layout: Navigation and core controls must remain in predictable locations.' },
     ]
   },
   {
-    id: 'asp-why',
-    title: 'Why This Matters',
-    sourceDocument: 'Accessibility & Safety Protocol',
-    description: 'Many people were mis-labeled as "lazy" when their brains needed different supports. The site must not add friction. This protocol ensures the system itself does not become a source of chaos.',
-  },
-  {
-    id: 'asp-core',
-    title: 'Core Principles (Checklist)',
+    id: 'asp-interaction',
+    title: 'Interaction Principles',
     sourceDocument: 'Accessibility & Safety Protocol',
     items: [
-      { id: 'asp-core-1', label: 'Reduce Cognitive Load:' },
-      { id: 'asp-core-2', label: 'Ensure Keyboard Navigability:' },
-      { id: 'asp-core-3', label: 'Provide Clear Structure:' },
-      { id: 'asp-core-4', label: 'High Contrast as Default:' },
-      { id: 'asp-core-5', label: 'No Ambiguity:' },
+      { id: 'asp-int-1', label: 'Forgiving Inputs: The system must handle errors gracefully and provide clear recovery paths.' },
+      { id: 'asp-int-2', label: 'No "Out of Sight, Out of Mind": Critical information must remain visible or be easily accessible.' },
+      { id: 'asp-int-3', label: 'Minimize Clicks: Reduce the number of steps required to complete core actions.' },
     ]
   },
     // BubbleShieldProtocol.tsx
   {
     id: 'bsp-purpose',
-    title: 'Purpose',
+    title: '1.0 Purpose',
     sourceDocument: 'Bubble Shield Protocol',
-    description: 'To define and mandate the use of sensory mitigation tools as non-negotiable assistive technology. This hardware is required to maintain stable executive function and prevent sensory overload/burnout. Treating these items as "wants" is a non-conforming condition.',
+    description: 'To mandate the use of sensory mitigation hardware (noise-cancelling headphones) as a non-negotiable tool for maintaining executive function, especially during Solo Execution Mode.',
   },
   {
-    id: 'bsp-audio',
-    title: '1.0 AUDITORY FIX (THE \'SOUND FILTER\')',
+    id: 'bsp-hardware',
+    title: '2.0 Approved Hardware',
     sourceDocument: 'Bubble Shield Protocol',
-    description: 'Non-Conforming Condition: Unpredictable, unpleasant noise (airplanes, voices, police sirens).',
     items: [
-      { id: 'bsp-audio-1', label: 'Mandatory Hardware:' },
-      { id: 'bsp-audio-2', label: 'Protocol:' },
-      { id: 'bsp-audio-3', label: 'Function:' },
+      { id: 'bsp-hw-1', label: 'Primary: Soundcore Space One (over-ear)' },
+      { id: 'bsp-hw-2', label: 'Secondary (Mobile): Soundcore Liberty 4 NC (in-ear)' },
     ]
   },
   {
-    id: 'bsp-visual',
-    title: '2.0 VISUAL FIX (THE \'LIGHT FILTER\')',
+    id: 'bsp-profiles',
+    title: '3.0 Configuration Profiles (Soundcore App)',
     sourceDocument: 'Bubble Shield Protocol',
-    description: 'Non-Conforming Condition: Overstimulation from harsh, bright, or flickering light sources (fluorescents, sunlight, screen glare).',
     items: [
-      { id: 'bsp-visual-1', label: 'Mandatory Hardware:' },
-      { id: 'bsp-visual-2', label: 'Protocol:' },
+      { id: 'bsp-prof-1', label: '**Profile 1.0 (Deep Work):** ANC Level Max, Wind Noise Reduction ON, Normal Mode (No EQ).' },
+      { id: 'bsp-prof-2', label: '**Profile 2.0 (Family Mode):** Transparency Mode ON (Vocal Mode), ANC Level Low.' },
+      { id: 'bsp-prof-3', label: '**Profile 3.0 (Travel):** ANC Level Max, Wind Noise Reduction ON, Transport Mode.' },
     ]
   },
   {
-    id: 'bsp-tactile',
-    title: '3.0 TACTILE/MOTION FIX (THE \'GROUNDING SYSTEM\')',
+    id: 'bsp-procedure',
+    title: '4.0 Usage Procedure',
     sourceDocument: 'Bubble Shield Protocol',
-    description: 'Non-Conforming Condition: Internal restlessness (ADHD/Vyvanse response) and difficulty transitioning focus.',
     items: [
-      { id: 'bsp-tactile-1', label: 'Weighted Blanket/Vest:' },
-      { id: 'bsp-tactile-2', label: 'Fidget Cube/Tool:' },
-      { id: 'bsp-tactile-3', label: 'Ergonomic Chair/Standing Desk:' },
-    ]
-  },
-  {
-    id: 'bsp-other',
-    title: '4.0 Other Critical Sensory Items',
-    sourceDocument: 'Bubble Shield Protocol',
-    description: 'The underlying cause of many daily "non-conforming conditions" is sensory input mismatch. Other items that often transition from "want" to "need":',
-    items: [
-      { id: 'bsp-other-1', label: 'Non-Verbal Communication Aids:' },
-      { id: 'bsp-other-2', label: 'Textured/Comfort Items:' },
-      { id: 'bsp-other-3', label: 'Routine Visuals:' },
+      { id: 'bsp-proc-1', label: 'Step 1: Upon entering Solo Execution Mode, immediately don headphones and activate Profile 1.0.' },
+      { id: 'bsp-proc-2', label: 'Step 2: Upon entering Family Structure Mode, switch to Profile 2.0 to maintain situational awareness.' },
+      { id: 'bsp-proc-3', label: 'Step 3: At the end of each day, place headphones on charging stand. A dead battery is a system failure.' },
     ]
   },
     // Manifesto.tsx
   {
-    id: 'man-diagnosis',
-    title: 'I. THE DIAGNOSIS (WHAT\'S BROKEN)',
+    id: 'man-intro',
+    title: 'INTRODUCTION: THE NON-CONFORMING CONDITION',
     sourceDocument: 'Manifesto',
-    description: `<p>I am a 40-year-old man diagnosed with <strong>Autism Spectrum Disorder (ASD)</strong> and <strong>ADHD</strong> in 2024. For 15 years, I was a <strong>Navy Systems Diagnostician</strong>—my job was to find the root cause of system failures, not patch holes.</p><p class="mt-2">When I turned that diagnostic lens on my own life, the pattern became clear:</p>`,
-    subSections: [
-      {
-        id: 'man-diag-list',
-        title: 'Hidden',
-        sourceDocument: 'Manifesto',
-        items: [
-          { id: 'man-diag-item-1', label: 'The Problem:' },
-          { id: 'man-diag-item-2', label: 'The Typical "Solution":' },
-          { id: 'man-diag-item-3', label: 'The Result:' },
-        ]
-      }
-    ]
+    description: `The default state of the world is **chaos**. For a neurodivergent brain, this chaos is not a minor inconvenience; it is a **non-conforming condition** that leads to system failure.
+      - Executive dysfunction is a **systems failure**.
+      - Sensory overload is a **systems failure**.
+      - Decision paralysis is a **systems failure**.
+      This is not a personal or moral failing. It is an engineering problem. The Wonky Sprout OS is the engineering solution.`,
+    subSections: [{
+      id: 'man-intro-hidden', title: 'Hidden', sourceDocument: 'Manifesto', description: '**Our mission is to build the "card catalog" for the chaotic library of a neurodivergent life.**'
+    }]
   },
   {
-    id: 'man-shift',
-    title: 'II. THE SHIFT (REFRAMING THE INPUT)',
-    sourceDocument: 'Manifesto',
-    description: `<p>I became a father to two kids. I became a co-parent navigating custody schedules. The chaos increased exponentially.</p><p class="mt-2"><strong>The Realization:</strong> My brain is not broken. It's a <strong>high-performance engine</strong> optimized for pattern recognition, hyper-focus, and systems-level thinking. The chaos is not my fault—it's the <strong>external load</strong> the system must handle.</p><p class="mt-2"><strong>The Engineering Question:</strong> What if I stopped trying to "fix" my brain and instead <strong>built structure to absorb the chaos?</strong></p><p class="mt-2 font-semibold">This is the shift from <strong>self-blame to systems design</strong>.</p>`,
-  },
-  {
-    id: 'man-structure',
-    title: 'III. THE STRUCTURE (THE ENGINEERING SOLUTION)',
+    id: 'man-principles',
+    title: 'CORE PRINCIPLES',
     sourceDocument: 'Manifesto',
     subSections: [
-      {
-        id: 'man-struct-dual',
-        title: 'The Dual-Mode Protocol',
-        sourceDocument: 'Manifesto',
-        description: `<p>Life is not one continuous state. It alternates between two distinct operating modes:</p><div class="pl-4 border-l-4 border-gray-700 my-4 py-2"><h4 class="font-bold text-accent-blue mt-2">MODE 1: SOLO EXECUTION (Mon 6PM → Fri 4PM)</h4><ul class="list-disc list-inside ml-4"><li><strong>Purpose:</strong> Deep work, system building, high-output engineering</li><li><strong>Structure:</strong> 7-hour focus blocks, minimal distractions, Bubble Shield protocols</li></ul><h4 class="font-bold text-accent-blue mt-4">MODE 2: FAMILY STRUCTURE (Fri 4PM → Mon 6PM)</h4><ul class="list-disc list-inside ml-4"><li><strong>Purpose:</strong> High-vigilance parenting, structured family time</li><li><strong>Structure:</strong> Hourly schedules, visual timers, sensory breaks</li></ul></div><p><strong>The Fix:</strong> By separating these modes and designing protocols for each, the system can handle both without failure.</p>`,
-      },
-      {
-        id: 'man-struct-fdp',
-        title: 'The Foundational Daily Protocols (The Non-Negotiables)',
-        sourceDocument: 'Manifesto',
-        description: 'These 5 protocols run <strong>every single day</strong>, regardless of mode:',
-        items: [
-          { id: 'man-fdp-1', label: 'Water Protocol' },
-          { id: 'man-fdp-2', label: 'Pill Protocol' },
-          { id: 'man-fdp-3', label: 'Chaos Capture Protocol' },
-          { id: 'man-fdp-4', label: 'Sleep Fence Protocol' },
-          { id: 'man-fdp-5', label: 'Daily Dump Protocol' },
-        ]
-      }
+        { id: 'man-p1', title: 'Hidden', sourceDocument: 'Manifesto', description: '## PRINCIPLE 1: EXTERNALIZE EVERYTHING' },
+        { id: 'man-p2', title: 'Hidden', sourceDocument: 'Manifesto', description: '## PRINCIPLE 2: STRUCTURE IS FREEDOM' },
+        { id: 'man-p3', title: 'Hidden', sourceDocument: 'Manifesto', description: '## PRINCIPLE 3: ELIMINATE THE "SHOULDS"' },
+        { id: 'man-p4', title: 'Hidden', sourceDocument: 'Manifesto', description: '## PRINCIPLE 4: AUTOMATE COMPLIANCE' },
+        { id: 'man-p5', title: 'Hidden', sourceDocument: 'Manifesto', description: '## PRINCIPLE 5: COMPLACENCY KILLS' },
     ]
   },
+  // HeadphoneControllerIpi.tsx
   {
-    id: 'man-bs',
-    title: 'VI. THE ANTI-BS COMMITMENT (THE VIBE)',
-    sourceDocument: 'Manifesto',
-    description: 'This brand operates under the <strong>"Anti-BS" framework</strong>:',
-    subSections: [
-      {
-        id: 'man-bs-do',
-        title: 'What I DO:',
-        sourceDocument: 'Manifesto',
-        items: [
-          { id: 'man-bs-do-1', label: 'Provide exact steps' },
-          { id: 'man-bs-do-2', label: 'Acknowledge executive dysfunction openly' },
-          { id: 'man-bs-do-3', label: 'Build systems that work when your brain doesn\'t' },
-          { id: 'man-bs-do-4', label: 'Use direct language ("This fixes X")' },
-        ]
-      },
-      {
-        id: 'man-bs-dont',
-        title: 'What I DON\'T DO:',
-        sourceDocument: 'Manifesto',
-        items: [
-          { id: 'man-bs-dont-1', label: 'Write motivational fluff' },
-          { id: 'man-bs-dont-2', label: 'Use corporate jargon or buzzwords' },
-          { id: 'man-bs-dont-3', label: 'Pretend systems don\'t require maintenance' },
-          { id: 'man-bs-dont-4', label: 'Create "inspiration" without action' },
-        ]
-      }
-    ]
-  },
-    // HeadphoneControllerIpi.tsx
-  {
-    id: 'hc-purpose',
-    title: '1.0 PURPOSE',
+    id: 'hc-ipi-objective',
+    title: '1.0 OBJECTIVE',
     sourceDocument: 'Headphone Controller IPI',
-    description: 'To "fix" the "chaos" of the mobile-only Soundcore app by reverse engineering its Bluetooth commands and building a "structured" desktop controller in VS Code.',
+    description: 'To reverse engineer the Bluetooth Low Energy (BLE) commands sent by the Anker Soundcore mobile app to the Soundcore Space One headphones. The ultimate goal is to build a structured desktop controller (web or native) to manage headphone settings without relying on the chaotic, mobile-only app.'
   },
   {
-    id: 'hc-phase1',
-    title: '2.0 PHASE 1: CAPTURE THE "CHAOS" (Bluetooth Packet Sniffing)',
-    sourceDocument: 'Headphone Controller IPI',
-    description: `This is the "classicwilly"<em class="text-text-light text-opacity-70 text-sm"> [cite: (file: CLASSICWILLY_SOP.md)]</em> / "Google fanboy"<em class="text-text-light text-opacity-70 text-sm"> [cite: (user instruction)]</em> solution. We will use your Pixel Fold to capture the "secret code."`,
-    items: [
-      { id: 'hc-p1-1', label: 'Enable Developer Options on your Pixel Fold' },
-      { id: 'hc-p1-2', label: 'Enable Bluetooth HCI Snoop Log' },
-      { id: 'hc-p1-3', label: 'Generate the "Chaos" Data:' },
-      { id: 'hc-p1-4', label: 'Turn Bluetooth HCI snoop log OFF.' },
-      { id: 'hc-p1-5', label: 'Retrieve the "Card Catalog":' },
-    ]
-  },
-  {
-    id: 'hc-phase2',
-    title: '3.0 PHASE 2: DIAGNOSE THE "CARD CATALOG" (Find the "Fix")',
+    id: 'hc-ipi-tools',
+    title: '2.0 TOOLS REQUIRED',
     sourceDocument: 'Headphone Controller IPI',
     items: [
-      { id: 'hc-p2-1', label: 'Install the "Analyzer":' },
-      { id: 'hc-p2-2', label: 'Find the "Fix":' },
+        { id: 'hc-tool-1', label: 'Android Phone with Soundcore App installed.' },
+        { id: 'hc-tool-2', label: 'macOS with Bluetooth development tools.' },
+        { id: 'hc-tool-3', label: 'Wireshark with BLE sniffing capabilities, or equivalent.' },
+        { id: 'hc-tool-4', label: 'A method to capture `btsnoop_hci.log` from the Android device.' },
     ]
   },
   {
-    id: 'hc-phase3',
-    title: '4.0 PHASE 3: BUILD THE "FIX" (The VS Code Prompt)',
+    id: 'hc-ipi-procedure',
+    title: '3.0 PROCEDURE',
     sourceDocument: 'Headphone Controller IPI',
-    description: 'Now we build the app. We will use Electron (what VS Code is built on) and Node.js (for Bluetooth control).<br/><br/>Here is the 11/10-perfection "vibe coding" prompt for GitHub Copilot. Paste this into a new .js file in a new WONKY_SPROUT_CONTROLLER folder in VS Code.',
-    subSections: [
-      {
-        id: 'hc-prompt',
-        title: 'Copilot Prompt (The "Vibe Code")',
-        sourceDocument: 'Headphone Controller IPI',
-        description: `"Hey Copilot. I'm a Systems Diagnostician building an "anti-BS" desktop tool with Electron and Node.js to "fix" my workflow. I need to control my Bluetooth (BLE) headphones directly. I have already reverse-engineered the "chaos" and found the "fix" (the specific hex commands).
-
-Set up a new, "structured" Electron.js project. Install the noble library.
-
-Using noble, write the "anti-BS" async function to:
-1. Scan for BLE devices.
-2. Find my "Soundcore Space One" headphones.
-3. Connect to the device.
-4. Discover the specific "Service" and "Characteristic" (which I will provide).
-
-Create three "fix-it" functions in the Electron main.js that I can call from my HTML button:
-- setTransparencyLevel_1()
-- setTransparencyLevel_3()
-- setTransparencyLevel_5()
-
-Each function must "fix" the "chaos" by writing the specific hex command to the correct Bluetooth characteristic.
-
-Give me the complete "card catalog" for the main.js (the "structure") and index.html (the "anti-BS" UI) to execute this "fix.""`
-      }
+    description: '**Phase 1: Packet Capture**',
+    items: [
+        { id: 'hc-proc-1', label: 'Enable Bluetooth HCI snoop log in Android Developer Options.' },
+        { id: 'hc-proc-2', label: 'Toggle Bluetooth off and on to start a clean log.' },
+        { id: 'hc-proc-3', label: 'Connect the Soundcore Space One headphones.' },
+        { id: 'hc-proc-4', label: 'Open the Soundcore app. Systematically perform one action at a time, and only one. For example: Change ANC from "Normal" to "Transport". Wait 10 seconds.' },
+        { id: 'hc-proc-5', label: 'Repeat for every single function in the app (ANC modes, LDAC toggle, Easy Chat, etc.).' },
+        { id: 'hc-proc-6', label: 'Retrieve the `btsnoop_hci.log` file from the device.' },
     ]
   },
-  // SystemIntegrationGuide.tsx
   {
-    id: 'sig-calendar',
-    title: '1. Google Calendar: Structure Your Time',
+    id: 'hc-ipi-phase2',
+    title: 'Phase 2: Analysis in Wireshark',
+    sourceDocument: 'Headphone Controller IPI',
+    items: [
+        { id: 'hc-proc-7', label: 'Load the HCI log into Wireshark.' },
+        { id: 'hc-proc-8', label: 'Filter for Attribute Protocol (ATT) packets (`btatt`).' },
+        { id: 'hc-proc-9', label: 'Identify the "Write Command" packets sent from the phone to the headphones.' },
+        { id: 'hc-proc-10', label: 'Correlate the timestamp of each "Write Command" with the action you performed in the app.' },
+        { id: 'hc-proc-11', label: 'Document the handle and the value (hex payload) for each command.' },
+    ]
+  },
+  {
+    id: 'hc-ipi-payload',
+    title: 'Phase 3: Payload Deconstruction',
+    sourceDocument: 'Headphone Controller IPI',
+    description: 'This is the hard part. The hex payloads are not simple flags. They are structured commands.',
+    items: [
+        { id: 'hc-proc-12', label: 'Isolate the payloads for similar functions (e.g., all ANC mode changes).' },
+        { id: 'hc-proc-13', label: 'Identify the common header/prefix for all commands.' },
+        { id: 'hc-proc-14', label: 'Identify the byte(s) that change for each specific action.' },
+        { id: 'hc-proc-15', label: 'The payload likely includes a command ID, payload length, the payload itself, and a checksum.' },
+    ]
+  },
+    // SystemIntegrationGuide.tsx
+  {
+    id: 'sig-gcal',
+    title: 'Google Calendar: Time Blocking & Mode Switching',
     sourceDocument: 'System Integration Guide',
     items: [
-      { id: 'sig-gc-1', label: 'Map "Solo Execution Mode" blocks (Deep Work, Breaks, Nutrient Intake) directly to Calendar events.' },
-      { id: 'sig-gc-2', label: 'Schedule "Foundational Daily Protocols" as recurring daily tasks to ensure non-negotiable compliance.' },
-      { id: 'sig-gc-3', label: 'Color-code event types (e.g., Teal for Deep Work, Blue for Family Time) for immediate visual context.' },
+        { id: 'sig-gcal-1', label: 'Create two recurring, all-day events: "Solo Execution Mode" (Mon-Fri) and "Family Structure Mode" (Fri-Mon).' },
+        { id: 'sig-gcal-2', label: 'Schedule all appointments, meetings, and hard commitments directly in Google Calendar.' },
+        { id: 'sig-gcal-3', label: 'At the start of each day, block out time for your Top 3 Critical tasks as "Focus Time" events.' },
+        { id: 'sig-gcal-4', label: 'Use the "Appointment Slots" feature to create structured office hours, preventing ad-hoc interruptions.' },
     ]
   },
   {
-    id: 'sig-keep',
-    title: '2. Google Keep: Capture & Prioritize Chaos',
+    id: 'sig-gtasks',
+    title: 'Google Tasks: Daily Execution & Inbox',
     sourceDocument: 'System Integration Guide',
     items: [
-      { id: 'sig-gk-1', label: 'Utilize Keep for the "Capture" protocol: voice notes, rapid text inputs, images. Externalize all emergent data.' },
-      { id: 'sig-gk-2', label: 'Create dedicated notes for "Daily Dump" sessions, archiving processed thoughts and verifying system state.' },
-      { id: 'sig-gk-3', label: 'Employ labels (e.g., `#idea`, `#task`, `#research`) for efficient triage and retrieval.' },
+        { id: 'sig-gtasks-1', label: 'Create a "Master Task List" in Google Tasks.' },
+        { id: 'sig-gtasks-2', label: 'Use the Google Tasks mobile widget as your primary inbox for capturing tasks on the go.' },
+        { id: 'sig-gtasks-3', label: 'During your Daily Debrief, migrate all tasks from Google Tasks into the Wonky Sprout Task Matrix for triage and prioritization.' },
+        { id: 'sig-gtasks-4', label: 'Use the "Add to Tasks" feature in Gmail to convert actionable emails directly into your inbox.' },
     ]
   },
   {
-    id: 'sig-tasks',
-    title: '3. Google Tasks: Actionable Item Management',
+    id: 'sig-gkeep',
+    title: 'Google Keep: Chaos Capture & Brain Dumps',
     sourceDocument: 'System Integration Guide',
     items: [
-      { id: 'sig-gt-1', label: 'Break down complex SOP steps into discrete, actionable tasks. Assign due dates to critical items.' },
-      { id: 'sig-gt-2', label: 'Prioritize tasks according to the WS-OS Hierarchy (Sleep → Food → Water → Medicine → Children → House → Work → Play).' },
-      { id: 'sig-gt-3', label: 'Integrate with Calendar to see tasks alongside scheduled events, providing a holistic view of commitments.' },
+        { id: 'sig-gkeep-1', label: 'Use the Google Keep widget for instant, one-tap access to a new note.' },
+        { id: 'sig-gkeep-2', label: 'Enable "Ok Google, take a note" for hands-free voice capture.' },
+        { id: 'sig-gkeep-3', label: 'Periodically (daily or weekly), copy/paste all content from Google Keep into the Wonky Sprout Brain Dump module for AI processing.' },
     ]
   },
-    // CoParentingProtocol.tsx
+  // AI Safety Protocol
   {
-    id: 'cpp-purpose',
-    title: 'Purpose',
-    sourceDocument: 'Co-Parenting Protocol',
-    description: 'To create a predictable, fact-based communication and logistics system that minimizes conflict, reduces decision fatigue, and ensures the children\'s needs are met consistently across both households.',
-  },
-  {
-    id: 'cpp-principles',
-    title: 'Core Principles',
-    sourceDocument: 'Co-Parenting Protocol',
+    id: 'aisp-data',
+    title: 'Data Privacy & PII',
+    sourceDocument: 'AI Safety Protocol',
+    description: 'The AI is a public tool. Assume anything you send can be seen by a human reviewer. This is non-negotiable.',
     items: [
-      { id: 'cpp-prin-1', label: 'Kids First, Always:' },
-      { id: 'cpp-prin-2', label: 'Communicate Like Colleagues:' },
-      { id: 'cpp-prin-3', label: 'Facts Over Feelings:' },
-      { id: 'cpp-prin-4', label: 'Respect Boundaries and Time:' },
-      { id: 'cpp-prin-5', label: 'Consistency is Key:' },
+      { id: 'aisp-data-1', label: '**NEVER** input Personally Identifiable Information (PII): Full names, addresses, phone numbers, email addresses, social security numbers, financial details.' },
+      { id: 'aisp-data-2', label: 'Use placeholders or generic terms (e.g., "my co-parent," "Project X," "my child").' },
+      { id: 'aisp-data-3', label: 'For sensitive topics, generalize the problem. Instead of "I\'m fighting with [Name] about...", use "How can I de-escalate a conflict with a co-parent about..."' },
+      { id: 'aisp-data-4', label: 'Trust the built-in PII scanner, but always perform a manual review before sending.' },
     ]
   },
   {
-    id: 'cpp-de-escalation',
-    title: 'Emergency De-escalation Checklist',
-    sourceDocument: 'Co-Parenting Protocol',
-    description: 'If a text exchange becomes emotionally charged, execute this IPI immediately.',
+    id: 'aisp-mental',
+    title: 'Mental & Emotional Health',
+    sourceDocument: 'AI Safety Protocol',
+    description: 'The AI is a tool, not a therapist. It cannot provide genuine empathy or emotional support.',
     items: [
-      { id: 'cpp-deesc-1', label: 'Step 1: STOP.' },
-      { id: 'cpp-deesc-2', label: 'Step 2: Acknowledge & Defer.' },
-      { id: 'cpp-deesc-3', label: 'Step 3: Disengage.' },
+      { id: 'aisp-mental-1', label: 'Do not use the AI as your primary source for emotional regulation.' },
+      { id: 'aisp-mental-2', label: 'If the AI\'s responses are increasing anxiety or distress, disengage immediately and activate a relevant IPI (e.g., Sensory Overload, Executive Dysfunction).' },
+      { id: 'aisp-mental-3', label: 'Fact-check any advice that relates to health, finance, or critical decisions. The AI can be wrong.' },
+    ]
+  },
+  // --- NEW: Operating Manual ---
+  {
+    id: 'om-intro',
+    title: '1.0 Core Concepts',
+    sourceDocument: 'Operating Manual',
+    description: 'This manual explains **how** to use the Wonky Sprout OS. The "Why" is covered in the **Manifesto**. This OS is not an app; it is an engineering solution to externalize executive function and manage chaos.',
+    items: [
+      { id: 'om-con-1', label: '**Protocols & SOPs:** These are your pre-compiled solutions to recurring problems. Find them in the SOP Vault. Execute them without deviation.' },
+      { id: 'om-con-2', label: '**Modules:** Your dashboard is built from modules. These are your tools. Customize your dashboard in "Mod Mode" to build the interface you need.' },
+      { id: 'om-con-3', label: '**The Garden:** This is a real-time diagnostic of your system\'s health. A low score is a non-conforming condition that requires investigation.' },
     ]
   },
   {
-    id: 'cpp-handoffs',
-    title: 'Handoff Protocol (Friday & Monday)',
-    sourceDocument: 'Co-Parenting Protocol',
-    description: 'Handoffs are brief, logistical transfers. They are not the time for big discussions.',
+    id: 'om-ops-control',
+    title: '2.0 The "Operations Control" Dashboard',
+    sourceDocument: 'Operating Manual',
+    description: 'Your central command interface. It is designed for zero scrolling and immediate access to critical systems.',
     subSections: [
       {
-        id: 'cpp-handoff-bag',
-        title: '🎒 Bag Checklist (Both Ways)',
-        sourceDocument: 'Co-Parenting Protocol',
-        items: [
-          { id: 'cpp-handoff-bag-1', label: 'School Backpack (with homework)' },
-          { id: 'cpp-handoff-bag-2', label: 'Any Necessary Medications' },
-          { id: 'cpp-handoff-bag-3', label: 'Comfort Items (stuffed animals, etc.)' },
-          { id: 'cpp-handoff-bag-4', label: 'Specific Clothing/Items for Weekend/Week' },
-          { id: 'cpp-handoff-bag-5', label: 'Phone/Charger (for Sebastian)' },
-        ]
+        id: 'om-ops-vitals',
+        title: 'System Vitals',
+        sourceDocument: 'Operating Manual',
+        description: 'An at-a-glance summary of your Sprout Health, Mood, and Energy. This is your first checkpoint of the day.'
       },
       {
-        id: 'cpp-handoff-verbal',
-        title: '🗣️ Verbal Update (2-Minute Max)',
-        sourceDocument: 'Co-Parenting Protocol',
-        items: [
-          { id: 'cpp-handoff-verb-1', label: '"Any health updates? Fevers, pains?"' },
-          { id: 'cpp-handoff-verb-2', label: '"Any behavioral notes, good or bad?"' },
-          { id: 'cpp-handoff-verb-3', label: '"Any important school notes/deadlines?"' },
-          { id: 'cpp-handoff-verb-4', label: '"Everything they need is in their bag."' },
-        ]
+        id: 'om-ops-daily',
+        title: 'Daily Command',
+        sourceDocument: 'Operating Manual',
+        description: 'A tabbed interface for daily execution. It includes your AI Briefing, Critical Tasks, Agenda, and Habit checklists.'
+      },
+      {
+        id: 'om-ops-launcher',
+        title: 'Module Launcher',
+        sourceDocument: 'Operating Manual',
+        description: 'A grid of icons for one-click access to all other enabled modules. Each module opens in a dedicated, full-screen view to minimize distraction.'
       }
     ]
   },
   {
-    id: 'cpp-emergency',
-    title: 'Emergency Protocol',
-    sourceDocument: 'Co-Parenting Protocol',
-    description: 'For true medical emergencies or urgent school issues.',
+    id: 'om-key-modules',
+    title: '3.0 Key Modules Explained',
+    sourceDocument: 'Operating Manual',
+    subSections: [
+       {
+        id: 'om-mod-matrix',
+        title: 'Task Matrix',
+        sourceDocument: 'Operating Manual',
+        description: 'Your central inbox for all non-recurring tasks. Use the "Inbox" tab for unscheduled items and the "Today" tab for your daily agenda. Engage **Focus Mode** to work through today\'s tasks sequentially, or **Triage Mode** to process your inbox.'
+      },
+      {
+        id: 'om-mod-habit',
+        title: 'Habit Streak Tracker',
+        sourceDocument: 'Operating Manual',
+        description: 'Define and track core habits. Check them off daily to build streaks. Click on any habit to see a detailed calendar and AI-powered analysis of your compliance.'
+      },
+      {
+        id: 'om-mod-knowledge',
+        title: 'Knowledge Synthesis Engine',
+        sourceDocument: 'Operating Manual',
+        description: 'Your personal "second brain." Capture insights, notes, and ideas. The AI can find related notes, helping you synthesize new connections from your existing knowledge.'
+      },
+    ]
+  },
+  {
+    id: 'om-gm-hub',
+    title: '4.0 The Game Master Hub',
+    sourceDocument: 'Operating Manual',
+    description: 'This is the administrative backend for the gamification system for the children.',
     items: [
-      { id: 'cpp-emer-1', label: 'Step 1: Call.' },
-      { id: 'cpp-emer-2', label: 'Step 2: Text.' },
-      { id: 'cpp-emer-3', label: 'Step 3: Update.' },
+      { id: 'om-gm-1', label: '**Quest Board:** Create multi-step quests for the children with gem rewards.' },
+      { id: 'om-gm-2', label: '**Redemption Hub:** Review and approve reward redemptions that the children have submitted from their dashboards.' },
+      { id: 'om-gm-3', label: '**Gem Administration:** Manually award or revoke individual gems for each child.' },
+    ]
+  },
+  {
+    id: 'om-ai-tools',
+    title: '5.0 Using the AI Tools',
+    sourceDocument: 'Operating Manual',
+    description: 'The OS integrates AI as a tool to reduce cognitive load.',
+    items: [
+      { id: 'om-ai-1', label: '**Live Chat (Voice):** Use voice commands to control the OS. Examples: "Add \'Buy milk\' to my tasks," "Open the Life Maintenance Protocol," "What are my tasks for today?"' },
+      { id: 'om-ai-2', label: '**SOP Diagnostician & Generator:** In the SOP Vault, describe a problem to the AI. It can either recommend an existing protocol or generate a draft of a new one for you.' },
+      { id: 'om-ai-3', label: '**AI Insights:** The System Insights dashboard and various modules contain AI-powered analysis to help you find patterns in your habits, finances, and daily performance.' },
+    ]
+  },
+  {
+    id: 'om-sys-mgmt',
+    title: '6.0 System Management',
+    sourceDocument: 'Operating Manual',
+    description: 'Maintain and configure your OS.',
+    items: [
+      { id: 'om-sys-1', label: '**Mod Mode:** Toggle the switch in the header to enter "Mod Mode." This allows you to customize the modules on any dashboard.' },
+      { id: 'om-sys-2', label: '**Data Management:** Access "System Management" from the "System" dropdown to Export a full backup of your OS or Import a backup to restore your data. **This is critical.**' },
+    ]
+  },
+  // --- NEW: Firebase Deployment Protocol ---
+  {
+    id: 'deploy-proto-purpose',
+    title: '1.0 Purpose',
+    sourceDocument: 'Firebase Deployment Protocol',
+    description: 'This SOP defines the procedure for deploying the Wonky Sprout OS to Firebase Hosting, transitioning it from a development environment to a live, production-ready state.',
+  },
+  {
+    id: 'deploy-prereqs',
+    title: '2.0 Prerequisites',
+    sourceDocument: 'Firebase Deployment Protocol',
+    items: [
+      { id: 'dep-pre-1', label: '**Node.js & npm:** A current LTS version of Node.js must be installed on the deployment machine.' },
+      { id: 'dep-pre-2', label: '**Firebase CLI:** The Firebase Command Line Interface must be installed globally. Execute `npm install -g firebase-tools` if not already present.' },
+      { id: 'dep-pre-3', label: '**Firebase Project:** The "wonky-sprout-os" Firebase project must be created and configured with Hosting enabled.' },
+    ]
+  },
+  {
+    id: 'deploy-auth',
+    title: '3.0 Authentication & Initialization',
+    sourceDocument: 'Firebase Deployment Protocol',
+    items: [
+        { id: 'dep-auth-1', label: '**Step 1: Login.** Authenticate with Firebase by running `firebase login` in your terminal and following the prompts.' },
+        { id: 'dep-auth-2', label: '**Step 2: Initialize Project.** In the root directory of the OS, run `firebase init hosting`. ' },
+        { id: 'dep-auth-3', label: '**Step 3: Configure.** When prompted: Select "Use an existing project" and choose "wonky-sprout-os". For the public directory, specify `.` (a single period). Configure as a single-page app by answering "Yes" to "rewrite all URLs to /index.html". Do NOT overwrite `index.html`.' },
+    ]
+  },
+  {
+    id: 'deploy-build',
+    title: '4.0 Build Step (CRITICAL)',
+    sourceDocument: 'Firebase Deployment Protocol',
+    description: 'The current in-browser Babel transpilation is for development ONLY. A production deployment requires a pre-compiled build.',
+    items: [
+        { id: 'dep-build-1', label: '**Future State (V2.0):** With a Vite build system, the command would be `npm run build`. This would generate an optimized `dist` folder. The public directory in `firebase.json` would then be set to `dist`.' },
+        { id: 'dep-build-2', label: '**Current State (V1.1):** As we are deploying the development environment, there is no build step. The public directory is `.` to serve the existing files directly. This is a non-conforming condition for a true production environment but is the required procedure for this version.' },
+    ]
+  },
+  {
+    id: 'deploy-deploy',
+    title: '5.0 Deployment Execution',
+    sourceDocument: 'Firebase Deployment Protocol',
+    items: [
+        { id: 'dep-deploy-1', label: '**Execute Deployment:** From the project root, run the command `firebase deploy --only hosting`.' },
+        { id: 'dep-deploy-2', label: '**Verify:** Upon completion, the CLI will provide a Hosting URL. Access this URL to verify that the deployment was successful and the OS is operational.' },
     ]
   },
 ];

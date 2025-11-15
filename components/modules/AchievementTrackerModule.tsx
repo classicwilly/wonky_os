@@ -1,18 +1,40 @@
-import React from 'react';
-import { useAppState } from '../../contexts/AppStateContext.tsx'; // Adjusted path
-import ContentCard from '../ContentCard.tsx'; // Adjusted path
-import { ALL_ACHIEVEMENTS, ADULT_REWARD_TIERS, RewardTier } from '../../constants.tsx'; // Adjusted path
 
-const Achievement: React.FC<{ emoji: string; label: string; collected: boolean }> = ({ emoji, label, collected }) => {
+import React from 'react';
+import { useAppState } from '../../contexts/AppStateContext.js';
+import ContentCard from '../ContentCard.js';
+// FIX: Changed imports for types from constants.js to types.ts
+import { ALL_ACHIEVEMENTS, ADULT_REWARD_TIERS } from '../../constants.js';
+
+
+// FIX: Explicitly typed component with React.FC and a props interface to handle the `key` prop correctly.
+interface AchievementCardProps {
+    achievement: { id: string; emoji: string; label: string; description: string; };
+    collected: { unlockedAt: string } | null;
+}
+const AchievementCard: React.FC<AchievementCardProps> = ({ achievement, collected }) => {
+    const isUnlocked = !!collected;
     return (
-        <div className={`flex flex-col items-center p-2 rounded-lg transition-all duration-300 ${collected ? 'bg-accent-green bg-opacity-20' : 'bg-gray-800'}`}>
-            <div className={`text-4xl transition-all duration-500 ${collected ? 'grayscale-0' : 'grayscale'}`}>{emoji}</div>
-            <div className={`text-xs text-center mt-1 ${collected ? 'text-accent-green font-semibold' : 'text-text-light text-opacity-50'}`}>{label}</div>
+        <div className={`p-3 rounded-lg border transition-all duration-300 ${isUnlocked ? 'bg-accent-green/10 border-accent-green/30' : 'bg-gray-800 border-gray-700 opacity-60'}`}>
+            <div className="flex items-center space-x-3">
+                <div className={`text-4xl ${!isUnlocked ? 'filter grayscale' : ''}`}>{achievement.emoji}</div>
+                <div>
+                    <h4 className={`text-md font-bold ${isUnlocked ? 'text-accent-green' : 'text-text-light'}`}>{achievement.label}</h4>
+                    <p className={`text-xs mt-1 ${isUnlocked ? 'text-green-400' : 'text-gray-400'}`}>
+                        {achievement.description}
+                    </p>
+                    {isUnlocked && <p className="text-xs text-gray-500 mt-1">Unlocked: {new Date(collected.unlockedAt).toLocaleDateString()}</p>}
+                </div>
+            </div>
         </div>
     );
 };
 
-const RewardTierCard: React.FC<{ tier: RewardTier, isUnlocked: boolean }> = ({ tier, isUnlocked }) => {
+// FIX: Explicitly typed component with React.FC and a props interface to handle the `key` prop correctly.
+interface RewardTierCardProps {
+    tier: { threshold: number; emoji: string; title: string; };
+    isUnlocked: boolean;
+}
+const RewardTierCard: React.FC<RewardTierCardProps> = ({ tier, isUnlocked }) => {
     const unlockedClasses = 'border-accent-green shadow-lg shadow-accent-green/10';
     const lockedClasses = 'border-gray-700 filter grayscale opacity-60';
 
@@ -31,9 +53,9 @@ const RewardTierCard: React.FC<{ tier: RewardTier, isUnlocked: boolean }> = ({ t
     );
 };
 
-const AchievementTrackerModule: React.FC = () => {
+const AchievementTrackerModule = () => {
     const { appState } = useAppState();
-    const collectedCount = appState.collectedAchievements.length;
+    const collectedCount = Object.keys(appState.collectedAchievements).length;
     const totalCount = ALL_ACHIEVEMENTS.length;
 
     const nextTier = ADULT_REWARD_TIERS.find(tier => collectedCount < tier.threshold);
@@ -43,7 +65,7 @@ const AchievementTrackerModule: React.FC = () => {
     return (
         <ContentCard title="🏆 Achievement System">
              <div className="flex flex-col h-full">
-                <div className="flex-grow overflow-y-auto pr-2">
+                <div className="flex-grow overflow-y-auto pr-2 max-h-96">
                     <div className="mb-4">
                         {nextTier ? (
                             <>
@@ -75,14 +97,13 @@ const AchievementTrackerModule: React.FC = () => {
                     </div>
 
                     <div className="border-t border-gray-700 pt-3">
-                         <h4 className="text-center text-accent-teal font-semibold mb-3">Collected ({collectedCount}/{totalCount})</h4>
-                        <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                         <h4 className="text-center text-accent-teal font-semibold mb-3">Achievement Roadmap ({collectedCount}/{totalCount})</h4>
+                        <div className="space-y-2">
                             {ALL_ACHIEVEMENTS.map(ach => (
-                                <Achievement 
+                                <AchievementCard 
                                     key={ach.id}
-                                    emoji={ach.emoji}
-                                    label={ach.label}
-                                    collected={appState.collectedAchievements.includes(ach.id)}
+                                    achievement={ach}
+                                    collected={appState.collectedAchievements[ach.id]}
                                 />
                             ))}
                         </div>
