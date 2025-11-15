@@ -1,8 +1,8 @@
 import React from 'react';
-import SopCard from './SopCard.tsx';
-import { SOP_DATA } from '../constants.ts';
-import { useAppState } from '../contexts/AppStateContext.tsx';
-import LibraryView from './LibraryView.tsx';
+import SopCard from './SopCard';
+import { SOP_DATA } from '../constants';
+import { useAppState } from '../contexts/AppStateContext';
+import LibraryView from './LibraryView';
 
 const SopVault = () => {
   const { appState, dispatch } = useAppState();

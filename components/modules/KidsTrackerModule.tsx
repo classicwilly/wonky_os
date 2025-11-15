@@ -1,10 +1,10 @@
 
 
 import React from 'react';
-import { useAppState } from '../../contexts/AppStateContext.js'; // Adjusted path
+import { useAppState } from '../../contexts/AppStateContext'; // Adjusted path
 
-import ContentCard from '../ContentCard.js'; // Adjusted path
-import TextInputItem from '../TextInputItem.js'; // Adjusted path
+import ContentCard from '../ContentCard'; // Adjusted path
+import TextInputItem from '../TextInputItem'; // Adjusted path
 
 const StatusButton = ({ label, isActive, onClick }) => {
     const baseClass = 'px-2 py-1 rounded-md text-xs font-semibold transition-colors w-full break-words';

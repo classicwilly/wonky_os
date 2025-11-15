@@ -1,9 +1,9 @@
 
 
 import React from 'react';
-import { useAppState } from '../../contexts/AppStateContext.js'; // Adjusted path
+import { useAppState } from '../../contexts/AppStateContext'; // Adjusted path
 
-import ContentCard from '../ContentCard.js'; // Adjusted path
+import ContentCard from '../ContentCard'; // Adjusted path
 
 const StatusButton = ({ label, isActive, onClick, activeClass = 'bg-accent-blue text-white' }) => {
     const baseClass = 'px-3 py-1 rounded-md text-sm font-semibold transition-colors w-full break-words';

@@ -1,9 +1,9 @@
 
 
 import React, { useState, useRef } from 'react';
-import { useAppState } from '../contexts/AppStateContext.tsx';
+import { useAppState } from '../contexts/AppStateContext';
 
-import ImportConfirmationModal from './ImportConfirmationModal.tsx';
+import ImportConfirmationModal from './ImportConfirmationModal';
 
 
 

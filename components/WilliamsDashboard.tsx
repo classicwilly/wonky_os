@@ -1,17 +1,17 @@
 
 import React from 'react';
-import { useAppState } from '../contexts/AppStateContext.js';
-import { useSystemHealth } from '../hooks/useSystemHealth.js';
-import ModuleIcon from './ModuleIcon.js';
-import { ALL_WILLIAM_MODULES_CONFIG } from '../constants.js';
-import { useProactiveAI } from '../hooks/useProactiveAI.js';
-import SystemNudgeModule from './modules/william/SystemNudgeModule.js';
-import ContentCard from './ContentCard.js';
+import { useAppState } from '../contexts/AppStateContext';
+import { useSystemHealth } from '../hooks/useSystemHealth';
+import ModuleIcon from './ModuleIcon';
+import { ALL_WILLIAM_MODULES_CONFIG } from '../constants';
+import { useProactiveAI } from '../hooks/useProactiveAI';
+import SystemNudgeModule from './modules/william/SystemNudgeModule';
+import ContentCard from './ContentCard';
 
 // Import modules needed for the new layout
-import StatusTrackerModule from './modules/StatusTrackerModule.js';
-import DayProgressBarModule from './modules/DayProgressBarModule.js';
-import WonkyAIModule from './modules/WonkyAIModule.js';
+import StatusTrackerModule from './modules/StatusTrackerModule';
+import DayProgressBarModule from './modules/DayProgressBarModule';
+import WonkyAIModule from './modules/WonkyAIModule';
 
 
 const SystemVitals = () => {

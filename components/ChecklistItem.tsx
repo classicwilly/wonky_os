@@ -1,7 +1,7 @@
 
 
 import React from 'react';
-import { useAppState } from '../contexts/AppStateContext.tsx';
+import { useAppState } from '../contexts/AppStateContext';
 
 // FIX: Added a props interface to make optional props explicit, resolving type errors.
 interface ChecklistItemProps {

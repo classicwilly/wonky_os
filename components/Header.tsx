@@ -1,8 +1,8 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useAppState } from '../contexts/AppStateContext.tsx';
-import { auth } from '../firebase.js';
+import { useAppState } from '../contexts/AppStateContext';
+import { auth } from '../firebase';
 
 
 

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import ContentCard from '../ContentCard.js'; // Adjusted path
+import ContentCard from '../ContentCard'; // Adjusted path
 
 const DayProgressBarModule = () => {
     const [progress, setProgress] = useState(0);

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import ContentCard from '../ContentCard.js';
+import ContentCard from '../ContentCard';
 
 const WilliamCoreDashboardModule = () => {
   return (

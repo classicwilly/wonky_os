@@ -1,6 +1,6 @@
 
 
-import { ALL_CHECKLIST_DATA } from './checklist-data.js';
+import { ALL_CHECKLIST_DATA } from './checklist-data';
 
 // FIX: Explicitly typed SOP_DATA to ensure type safety and resolve inference issues.
 export const SOP_DATA = [

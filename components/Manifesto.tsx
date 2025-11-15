@@ -1,7 +1,7 @@
 
 
 import React from 'react';
-import ProtocolView from './ProtocolView.js';
+import ProtocolView from './ProtocolView';
 
 const Manifesto = () => {
     return (

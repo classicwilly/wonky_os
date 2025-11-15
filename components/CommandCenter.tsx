@@ -1,8 +1,8 @@
 
 
 import React, { useMemo } from 'react';
-import { useAppState } from '../contexts/AppStateContext.tsx';
-import ContentCard from './ContentCard.tsx';
+import { useAppState } from '../contexts/AppStateContext';
+import ContentCard from './ContentCard';
 
 
 const toYMD = (date) => date.toISOString().split('T')[0];

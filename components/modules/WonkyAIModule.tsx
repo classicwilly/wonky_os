@@ -1,11 +1,11 @@
 
 import React, { useState } from 'react';
 import { GoogleGenAI } from "@google/genai";
-import ContentCard from '../ContentCard.js'; // Adjusted path
-import { SecureMarkdown } from '../../utils/secureMarkdownRenderer.js';
-import { useAIPromptSafety } from '../../hooks/useAIPromptSafety.js';
-import AIConsentModal from '../AIConsentModal.js';
-import PIIWarningModal from '../PIIWarningModal.js';
+import ContentCard from '../ContentCard'; // Adjusted path
+import { SecureMarkdown } from '../../utils/secureMarkdownRenderer';
+import { useAIPromptSafety } from '../../hooks/useAIPromptSafety';
+import AIConsentModal from '../AIConsentModal';
+import PIIWarningModal from '../PIIWarningModal';
 
 const WonkyAIModule = () => {
     const [prompt, setPrompt] = useState('');

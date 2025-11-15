@@ -1,7 +1,7 @@
 
 import React from 'react';
-import ProtocolView from './ProtocolView.js';
-import { SOP_DATA } from '../constants.js';
+import ProtocolView from './ProtocolView';
+import { SOP_DATA } from '../constants';
 
 const FoundationalProtocols = () => {
   // Note: The original component had complex state management for editing.

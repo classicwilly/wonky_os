@@ -2,7 +2,7 @@
 
 
 import React from 'react';
-import { useAppState } from '../contexts/AppStateContext.tsx';
+import { useAppState } from '../contexts/AppStateContext';
 
 const SopCard = ({ sop, isTemplate = false }) => {
   const { appState, dispatch } = useAppState();

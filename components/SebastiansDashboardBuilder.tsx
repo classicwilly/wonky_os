@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { useAppState } from '../contexts/AppStateContext.js';
-import { ALL_SEBASTIAN_MODULES_CONFIG } from '../constants.js';
+import { useAppState } from '../contexts/AppStateContext';
+import { ALL_SEBASTIAN_MODULES_CONFIG } from '../constants';
 
 // FIX: Explicitly typed component with React.FC and a props interface to handle the `key` prop correctly.
 interface TabButtonProps {

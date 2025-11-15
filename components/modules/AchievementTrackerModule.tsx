@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { useAppState } from '../../contexts/AppStateContext.js';
-import ContentCard from '../ContentCard.js';
+import { useAppState } from '../../contexts/AppStateContext';
+import ContentCard from '../ContentCard';
 // FIX: Changed imports for types from constants.js to types.ts
-import { ALL_ACHIEVEMENTS, ADULT_REWARD_TIERS } from '../../constants.js';
+import { ALL_ACHIEVEMENTS, ADULT_REWARD_TIERS } from '../../constants';
 
 
 // FIX: Explicitly typed component with React.FC and a props interface to handle the `key` prop correctly.

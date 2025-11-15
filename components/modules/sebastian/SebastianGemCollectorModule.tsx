@@ -1,7 +1,7 @@
 
 import React from 'react';
-import GemCollector from '../../GemCollector.js';
-import { useAppState } from '../../../contexts/AppStateContext.js';
+import GemCollector from '../../GemCollector';
+import { useAppState } from '../../../contexts/AppStateContext';
 
 const SebastianGemCollectorModule = () => {
     const { appState } = useAppState();

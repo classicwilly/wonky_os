@@ -1,8 +1,8 @@
 
 import React from 'react';
-import ChecklistItem from '../../ChecklistItem.js';
-import ContentCard from '../../ContentCard.js';
-import { ALL_CHECKLIST_DATA } from '../../../checklist-data.js';
+import ChecklistItem from '../../ChecklistItem';
+import ContentCard from '../../ContentCard';
+import { ALL_CHECKLIST_DATA } from '../../../checklist-data';
 
 const SebastianChecklistModule = () => {
   const protocolData = ALL_CHECKLIST_DATA.filter(s => s.sourceDocument === "Bash's Corner");

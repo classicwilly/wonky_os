@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 
-import { useAppState } from '../contexts/AppStateContext.tsx';
-import { SOP_DATA } from '../constants.ts';
+import { useAppState } from '../contexts/AppStateContext';
+import { SOP_DATA } from '../constants';
 
 const SopForm = () => {
   const { appState, dispatch } = useAppState();

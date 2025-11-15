@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { auth, db } from '../firebase.js';
-import { defaultUserState } from '../defaultStates.ts'; // Import from new file
+import { auth, db } from '../firebase';
+import { defaultUserState } from '../defaultStates'; // Import from new file
 
 const toYMD = (date) => date.toISOString().split('T')[0];
 const timePresets = { work: 25 * 60, shortBreak: 5 * 60, longBreak: 15 * 60 };
