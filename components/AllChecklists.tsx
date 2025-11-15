@@ -1,7 +1,7 @@
 import React from 'react';
-import { ALL_CHECKLIST_DATA } from '../checklist-data.js';
-import LibraryView from './LibraryView.js';
-import ChecklistCard from './ChecklistCard.js';
+import { ALL_CHECKLIST_DATA } from '../checklist-data.tsx';
+import LibraryView from './LibraryView.tsx';
+import ChecklistCard from './ChecklistCard.tsx';
 
 const AllChecklists = () => {
     const allChecklistSections = ALL_CHECKLIST_DATA.flatMap(protocol => 

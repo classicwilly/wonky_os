@@ -1,5 +1,6 @@
 
 
+
 // FIX: Explicitly typed ALL_CHECKLIST_DATA to ensure type safety and resolve inference issues.
 export const ALL_CHECKLIST_DATA = [
   // EssentialsTracker (from CommandCenter)

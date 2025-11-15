@@ -32,6 +32,7 @@ export const defaultUserState = {
   activeSops: [],
   activeUserSopId: null,
   activeSopTemplate: null,
+  newSopType: null,
   brainDumpText: '...and do all the other shit.',
   sensoryState: { sound: null, sight: null, touch: null },
   familyLogEntries: [],

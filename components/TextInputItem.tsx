@@ -2,7 +2,7 @@
 
 
 import React from 'react';
-import { useAppState } from '../contexts/AppStateContext.js';
+import { useAppState } from '../contexts/AppStateContext.tsx';
 
 
 

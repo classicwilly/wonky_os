@@ -2,12 +2,12 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 
-import { useAppState } from '../contexts/AppStateContext.js';
-import { SOP_DATA } from '../constants.js';
+import { useAppState } from '../contexts/AppStateContext.tsx';
+import { SOP_DATA } from '../constants.ts';
 
 const SopForm = () => {
   const { appState, dispatch } = useAppState();
-  const { generatedSopDraft, editingSopId, userSops, modifiedSops, activeSopTemplate } = appState;
+  const { generatedSopDraft, editingSopId, userSops, modifiedSops, activeSopTemplate, newSopType } = appState;
   
   const isEditMode = editingSopId !== null;
 
@@ -56,9 +56,13 @@ const SopForm = () => {
         setTaskTemplate(sopToLoad.taskTemplate || []);
         setIsPageView(sopToLoad.isPageView || false);
         setIsTemplate(false);
+    } else if (!isEditMode && newSopType === 'template') {
+        setIsTemplate(true);
+    } else {
+        setIsTemplate(false);
     }
     
-  }, [editingSopId, allSops, generatedSopDraft, activeSopTemplate, dispatch, isEditMode]);
+  }, [editingSopId, allSops, generatedSopDraft, activeSopTemplate, dispatch, isEditMode, newSopType]);
 
 
   const handleStepChange = (index, value) => {
@@ -149,6 +153,7 @@ const SopForm = () => {
   const handleCancel = () => {
     handleClearForm();
     dispatch({ type: 'SET_EDITING_SOP_ID', payload: null });
+    dispatch({ type: 'SET_NEW_SOP_TYPE', payload: null });
     dispatch({ type: 'SET_VIEW', payload: 'sop-vault' });
   };
   

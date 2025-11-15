@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { auth, db } from '../firebase.js';
-import { defaultUserState } from '../defaultStates.js'; // Import from new file
+import { defaultUserState } from '../defaultStates.ts'; // Import from new file
 
 const toYMD = (date) => date.toISOString().split('T')[0];
 const timePresets = { work: 25 * 60, shortBreak: 5 * 60, longBreak: 15 * 60 };
@@ -241,6 +241,7 @@ const { currentStreak, longestStreak } = recalculateStreaks(habitId, newLog); re
         case 'ADD_SOP_TEMPLATE': newState.userSopTemplates = [...newState.userSopTemplates, action.payload]; break;
         case 'DELETE_SOP_TEMPLATE': newState.userSopTemplates = newState.userSopTemplates.filter(t => t.id !== action.payload); break;
         case 'SET_ACTIVE_SOP_TEMPLATE': newState.activeSopTemplate = action.payload; break;
+        case 'SET_NEW_SOP_TYPE': newState.newSopType = action.payload; break;
         case 'RESET_CHILD_REWARDS': const { persona: resetPersona } = action.payload; newState.collectedGems = {...newState.collectedGems, [resetPersona]: []}; newState.redeemedRewards = {...newState.redeemedRewards, [resetPersona]: []}; newState.acknowledgedRedemptions = {...newState.acknowledgedRedemptions, [resetPersona]: []}; newState.fulfillmentLog = newState.fulfillmentLog.filter(f => f.persona !== resetPersona); break;
         case 'ADD_QUEST': 
             const newQuest = { 

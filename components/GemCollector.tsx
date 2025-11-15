@@ -1,7 +1,7 @@
 
 import React from 'react';
-import ContentCard from './ContentCard.js';
-import { ALL_GEMS, REWARD_TIERS } from '../constants.js';
+import ContentCard from './ContentCard.tsx';
+import { ALL_GEMS, REWARD_TIERS } from '../constants.ts';
 
 // FIX: Explicitly typed the component with React.FC and a props interface to handle the `key` prop correctly.
 interface GemProps {

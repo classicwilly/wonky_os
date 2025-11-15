@@ -2,14 +2,14 @@
 
 
 import React, { useState, useMemo } from 'react';
-import { useAppState } from '../contexts/AppStateContext.js';
+import { useAppState } from '../contexts/AppStateContext.tsx';
 import { GoogleGenAI, Type } from "@google/genai";
-import { useAIPromptSafety } from '../hooks/useAIPromptSafety.js';
-import AIConsentModal from './AIConsentModal.js';
-import PIIWarningModal from './PIIWarningModal.js';
-import AITrendAnalysis from './insights/AITrendAnalysis.js';
-import HabitHeatmap from './insights/HabitHeatmap.js';
-import ContentCard from './ContentCard.js';
+import { useAIPromptSafety } from '../hooks/useAIPromptSafety.ts';
+import AIConsentModal from './AIConsentModal.tsx';
+import PIIWarningModal from './PIIWarningModal.tsx';
+import AITrendAnalysis from './insights/AITrendAnalysis.tsx';
+import HabitHeatmap from './insights/HabitHeatmap.tsx';
+import ContentCard from './ContentCard.tsx';
 
 
 const WeeklyReviewWizard = () => {
